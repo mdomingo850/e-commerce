@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "PCSzV9U7Hb3pFIYQ4FCYeFI0B1h4yNANIVJfuGKEYKjnUmsqeDDXEPivCAG/a5vJs9fkE2m7BkGqeqR06S2azQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Michael\\source\\repos\\E-Commerce\\Domain\\Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Michael\\.nuget\\packages\\ardalis.result\\8.0.0\\ardalis.result.8.0.0.nupkg.sha512",
+    "C:\\Users\\Michael\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\Michael\\.nuget\\packages\\system.text.json\\7.0.3\\system.text.json.7.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
