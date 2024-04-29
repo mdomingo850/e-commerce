@@ -5,10 +5,15 @@ namespace Domain.Entities.Products;
 
 public sealed class Product
 {
-    public int Id { get; }
-    public string Name { get; }
-    public Money Price { get; }
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public Money Price { get; private set; }
     public int Quantity { get; private set; }
+
+    private Product()
+    {
+
+    }
 
     private Product(int id, string name, string currency, decimal cost, int quantity)
     {

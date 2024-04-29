@@ -18,7 +18,7 @@ public class BlankOrderRepository : IOrderRepository
     {
         var customer = Customer.Create(1, "Clark", "Kent");
         var product = Product.Create(1, "Google Nest", new Money("$", 1), 5);
-        var orderItem = new OrderItem(product, 100);
+        var orderItem = OrderItem.Create(product, 100);
         var orderItems = new HashSet<OrderItem>() { orderItem };
 
         return Order.Create(customer, orderItems, DateTime.UtcNow, OrderStatus.Placed, id);

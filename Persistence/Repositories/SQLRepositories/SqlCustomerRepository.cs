@@ -22,6 +22,6 @@ internal class SqlCustomerRepository : ICustomerRepository
             return null;
         }
 
-        return Customer.Create(customerModel.Id, customerModel.FirstName, customerModel.LastName);
+        return customerModel;
     }
 }

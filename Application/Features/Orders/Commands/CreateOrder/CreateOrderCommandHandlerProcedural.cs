@@ -79,7 +79,7 @@ public class CreateOrderCommandHandlerProcedural
         if (!product.IsInStock(firstProductQuanitity))
             return Result.Conflict();
 
-        var orderItem = new OrderItem(product, firstProductQuanitity);
+        var orderItem = OrderItem.Create(product, firstProductQuanitity);
 
         var order = Order.Create(customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
 

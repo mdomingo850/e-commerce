@@ -2,8 +2,23 @@
 
 namespace Domain.Entities.Orders;
 
-public sealed class OrderItem(Product Product, int quanitity)
+public sealed class OrderItem
 {
-    public Product Product { get; } = Product;
-    public int Quanitity { get; } = quanitity;
+
+    private OrderItem() { }
+
+    private OrderItem(Product product, int quanitity)
+    {
+        Product = product;
+        Quanitity = quanitity;
+    }
+
+    public static OrderItem Create(Product product, int quantity)
+    {
+        return new OrderItem(product, quantity);
+    }
+
+    public int Id { get; private set; }
+    public Product Product { get; private set; }
+    public int Quanitity { get; private set; } 
 }

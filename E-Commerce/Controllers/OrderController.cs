@@ -26,7 +26,7 @@ namespace E_Commerce.Controllers
         public async Task<Result> Create()
         {
             var product = Product.Create(1, "Google Nest", new Money("$", 1), 5);
-            var orderItem = new OrderItem(product, 3);
+            var orderItem = OrderItem.Create(product, 3);
             var orderItems = new HashSet<Tuple<int, int>>() { new Tuple<int,int>(1, 5) };
             var command = new CreateOrderCommand(1, orderItems);
 

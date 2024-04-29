@@ -27,6 +27,8 @@ public class Order : AggregateRoot
     public OrderStatus OrderStatus { get; private set; }
     //public Money Subtotal { get; }
 
+    private Order(int id = 0) : base(id) { }
+
     private Order(
         int id,
         Customer customer,
@@ -54,7 +56,7 @@ public class Order : AggregateRoot
 
     public void Add(Product product, int quantity)
     {
-        var orderItem = new OrderItem(product, quantity);
+        var orderItem = OrderItem.Create(product, quantity);
         
         _orderItems.Add(orderItem);
     }

@@ -12,8 +12,8 @@ public static class PersistenceRegistrationServices
     {
         services.AddDbContext<SharedDbContext>();
         services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
-        services.AddScoped<IInventoryRepository, BlankInventoryRepository>();
-        services.AddScoped<IOrderRepository, BlankOrderRepository>();
+        services.AddScoped<IInventoryRepository, SqlInventoryRepository>();
+        services.AddScoped<IOrderRepository, SqlOrderRespository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         return services;
     }
