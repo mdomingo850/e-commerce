@@ -12,7 +12,7 @@ public static class ApplicationRegistrationServices
         {
             config.RegisterServicesFromAssemblies(typeof(ApplicationRegistrationServices).Assembly);
 
-            config.NotificationPublisher = new TaskWhenAllPublisher();
+            //config.NotificationPublisher = new TaskWhenAllPublisher();
         });
 
         return services;
