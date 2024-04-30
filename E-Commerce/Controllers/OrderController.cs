@@ -25,10 +25,8 @@ namespace E_Commerce.Controllers
         [HttpPost(Name = "Order")]
         public async Task<Result> Create()
         {
-            var product = Product.Create(1, "Google Nest", new Money("$", 1), 5);
-            var orderItem = OrderItem.Create(product, 3);
-            var orderItems = new HashSet<Tuple<int, int>>() { new Tuple<int,int>(1, 5) };
-            var command = new CreateOrderCommand(1, orderItems);
+            var orderItems = new HashSet<Tuple<Guid, int>>() { new Tuple<Guid, int>(Guid.Parse("F73B3C15-51E8-4763-AE29-B4F6B7714A8D"), 5) };
+            var command = new CreateOrderCommand(Guid.Parse("BB9E1061-BD8E-414D-BDEB-1C20904E3149"), orderItems);
 
             await _mediator.Send(command);
 

@@ -8,7 +8,7 @@ public class BlankCustomerRepository : ICustomerRepository
 {
 
 
-    public async Task<Customer?> GetByIdAsync(int id)
+    public async Task<Customer?> GetByIdAsync(Guid id)
     {
         await Task.Delay(2000);
 

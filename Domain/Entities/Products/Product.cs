@@ -1,21 +1,23 @@
 ﻿using Domain.ValueObjects;
 using Ardalis.Result;
+using Domain.Primitives;
+using Newtonsoft.Json;
 
 namespace Domain.Entities.Products;
 
-public sealed class Product
+public sealed class Product : AggregateRoot
 {
-    public int Id { get; private set; }
+    //[JsonProperty(PropertyName = "name", Order = 2)]
     public string Name { get; private set; }
     public Money Price { get; private set; }
     public int Quantity { get; private set; }
 
-    private Product()
+    private Product(Guid id) : base(id)
     {
 
     }
 
-    private Product(int id, string name, string currency, decimal cost, int quantity)
+    private Product(Guid id, string name, string currency, decimal cost, int quantity) : base(id)
     {
         Id = id;
         Name = name;
@@ -23,7 +25,8 @@ public sealed class Product
         Quantity = quantity;
     }
 
-    private Product(int id, string name, Money price, int quantity)
+    [JsonConstructor]
+    private Product(Guid id, string name, Money price, int quantity) : base(id)
     {
         Id = id;
         Name = name;
@@ -31,12 +34,12 @@ public sealed class Product
         Quantity = quantity;
     }
 
-    public static Product Create(int id, string name, Money price, int quantity)
+    public static Product Create(Guid id, string name, Money price, int quantity)
     {
         return new Product(id, name, price, quantity);
     }
 
-    public static Product Create(int id, string name, string currency, decimal cost, int quantity)
+    public static Product Create(Guid id, string name, string currency, decimal cost, int quantity)
     {
         return new Product(id, name, currency, cost, quantity);
     }

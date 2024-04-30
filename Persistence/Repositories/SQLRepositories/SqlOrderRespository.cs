@@ -28,53 +28,11 @@ internal class SqlOrderRespository : IOrderRepository
 
     public async Task AddAsync(Order order)
     {
-        using var transaction = _dbContext.Database.BeginTransaction();
-
-        try
-        {
-            _dbContext.Orders.Add(order);
-            await _dbContext.SaveChangesAsync();
-
-            var outboxMessages = _dbContext.ChangeTracker
-                .Entries<AggregateRoot>()
-                .Select(x => x.Entity)
-                .SelectMany(aggregateRoot =>
-                {
-                    var domainEvents = aggregateRoot.GetDomainEvents();
-
-                    aggregateRoot.ClearDomainEvents();
-
-                    return domainEvents;
-                })
-                .Select(domainEvent => new OutboxMessage
-                (
-                    Guid.NewGuid(),
-                    domainEvent.GetType().Name,
-                    JsonConvert.SerializeObject(
-                        domainEvent,
-                        new JsonSerializerSettings
-                        {
-                            TypeNameHandling = TypeNameHandling.All
-                        }),
-                    DateTime.UtcNow,
-                null,
-                    null
-                ))
-                .ToList();
-
-            _dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
-            await _dbContext.SaveChangesAsync();
-
-            transaction.Commit();
-        }
-        catch (Exception ex)
-        {
-            transaction.Rollback();
-            throw;
-        }
+        _dbContext.Orders.Add(order);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Order?> GetByIdAsync(int id)
+    public async Task<Order?> GetByIdAsync(Guid id)
     {
         var orderModel = await _dbContext.Orders.SingleOrDefaultAsync(x => x.Id == id);
 

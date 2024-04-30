@@ -14,14 +14,14 @@ public class BlankOrderRepository : IOrderRepository
         await Task.Delay(2000);
     }
 
-    public async Task<Order> GetByIdAsync(int id)
+    public async Task<Order> GetByIdAsync(Guid id)
     {
-        var customer = Customer.Create(1, "Clark", "Kent");
-        var product = Product.Create(1, "Google Nest", new Money("$", 1), 5);
-        var orderItem = OrderItem.Create(product, 100);
+        var customer = Customer.Create(Guid.NewGuid(), "Clark", "Kent");
+        var product = Product.Create(Guid.NewGuid(), "Google Nest", new Money("$", 1), 5);
+        var orderItem = OrderItem.Create(product.Id, product, 100);
         var orderItems = new HashSet<OrderItem>() { orderItem };
 
-        return Order.Create(customer, orderItems, DateTime.UtcNow, OrderStatus.Placed, id);
+        return Order.Create(id, customer, orderItems, DateTime.UtcNow, OrderStatus.Placed);
     }
 
     public async Task UpdateAsync(Order order)

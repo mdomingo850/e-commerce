@@ -16,7 +16,7 @@ internal class SqlInventoryRepository : IInventoryRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Product?> GetProductByIdAsync(int id)
+    public async Task<Product?> GetProductByIdAsync(Guid id)
     {
         var productModel = await _dbContext.Products.SingleOrDefaultAsync(x => x.Id == id);
 

@@ -3,6 +3,6 @@ using MediatR;
 
 namespace Application.Events;
 
-internal record OrderPaidEvent(int OrderId, OrderItem OrderItem) : INotification
+internal record OrderPaidEvent(Guid OrderId, OrderItem OrderItem) : INotification
 {
 }

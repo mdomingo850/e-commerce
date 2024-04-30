@@ -1,19 +1,20 @@
-﻿namespace Domain.Entities.Customers;
+﻿using Domain.Primitives;
 
-public sealed class Customer
+namespace Domain.Entities.Customers;
+
+public sealed class Customer : AggregateRoot
 {
-    public int Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
 
-    private Customer(int id, string firstName, string lastName)
+    private Customer(Guid id, string firstName, string lastName) : base(id)
     {
         Id = id;
         FirstName = firstName;
         LastName = lastName;
     }
 
-    public static Customer Create(int id, string firstName, string lastName)
+    public static Customer Create(Guid id, string firstName, string lastName)
     {
         return new Customer(id, firstName, lastName);
     }

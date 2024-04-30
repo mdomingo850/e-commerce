@@ -1,24 +1,22 @@
 ﻿using Domain.Entities.Products;
+using Domain.Primitives;
 
 namespace Domain.Entities.Orders;
 
-public sealed class OrderItem
+public sealed class OrderItem : Entity
 {
+    private OrderItem(Guid id) : base(id) { }
 
-    private OrderItem() { }
-
-    private OrderItem(Product product, int quanitity)
+    public OrderItem(Guid id, Product product, int quanitity) : base(id)
     {
         Product = product;
         Quanitity = quanitity;
     }
 
-    public static OrderItem Create(Product product, int quantity)
+    public static OrderItem Create(Guid id, Product product, int quantity)
     {
-        return new OrderItem(product, quantity);
+        return new OrderItem(id, product, quantity);
     }
-
-    public int Id { get; private set; }
     public Product Product { get; private set; }
     public int Quanitity { get; private set; } 
 }

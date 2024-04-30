@@ -13,7 +13,7 @@ internal class SqlCustomerRepository : ICustomerRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Customer?> GetByIdAsync(int id)
+    public async Task<Customer?> GetByIdAsync(Guid id)
     {
         var customerModel = await _dbContext.Customers.SingleOrDefaultAsync(x => x.Id == id);
 

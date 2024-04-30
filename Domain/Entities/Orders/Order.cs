@@ -29,10 +29,10 @@ public class Order : AggregateRoot
     public OrderStatus OrderStatus { get; private set; }
     //public Money Subtotal { get; }
 
-    private Order(int id = 0) : base(id) { }
+    private Order(Guid id) : base(id) { }
 
     private Order(
-        int id,
+        Guid id,
         Customer customer,
         HashSet<OrderItem> orderItems,
         DateTime orderDate,
@@ -45,22 +45,22 @@ public class Order : AggregateRoot
     }
 
     public static Order Create(
+        Guid id,
         Customer customer,
         HashSet<OrderItem> orderItems,
         DateTime orderDate,
-        OrderStatus orderStatus = OrderStatus.Placed,
-        int id = 0)
+        OrderStatus orderStatus = OrderStatus.Placed)
     {
         var order = new Order(id, customer, orderItems, orderDate, orderStatus);
 
-        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), order, order.OrderItems.First()));
+        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), id, order.OrderItems.First()));
 
         return order;
     }
 
     public void Add(Product product, int quantity)
     {
-        var orderItem = OrderItem.Create(product, quantity);
+        var orderItem = OrderItem.Create(Guid.NewGuid(), product, quantity);
         
         _orderItems.Add(orderItem);
     }

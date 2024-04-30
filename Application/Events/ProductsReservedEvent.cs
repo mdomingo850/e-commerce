@@ -2,6 +2,6 @@
 
 namespace Application.Events;
 
-internal record ProductsReservedEvent(int OrderId) : INotification
+internal record ProductsReservedEvent(Guid OrderId) : INotification
 {
 }

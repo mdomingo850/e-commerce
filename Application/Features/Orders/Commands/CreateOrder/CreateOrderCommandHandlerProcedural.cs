@@ -79,9 +79,9 @@ public class CreateOrderCommandHandlerProcedural
         if (!product.IsInStock(firstProductQuanitity))
             return Result.Conflict();
 
-        var orderItem = OrderItem.Create(product, firstProductQuanitity);
+        var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
 
-        var order = Order.Create(customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
+        var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
 
         await _orderRepository.AddAsync(order);
 

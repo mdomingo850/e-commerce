@@ -8,5 +8,5 @@ public interface IOrderRepository
 
     Task UpdateAsync(Order order);
 
-    Task<Order?> GetByIdAsync(int id);
+    Task<Order?> GetByIdAsync(Guid id);
 }

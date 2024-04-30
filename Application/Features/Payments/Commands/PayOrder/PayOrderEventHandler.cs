@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Payments.Commands.PayOrder;
 
-internal class PayOrderEventHandler : INotificationHandler<OrderCreatedEvent>
+internal class PayOrderEventHandler : INotificationHandler<OrderCreatedDomainEvent>
 {
     private readonly IPaymentService _paymentService;
     private readonly IPublisher _mediator;
@@ -23,7 +23,7 @@ internal class PayOrderEventHandler : INotificationHandler<OrderCreatedEvent>
         _logger = logger;
     }
 
-    public async Task Handle(OrderCreatedEvent message, CancellationToken cancellationToken)
+    public async Task Handle(OrderCreatedDomainEvent message, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Pay order started");
 

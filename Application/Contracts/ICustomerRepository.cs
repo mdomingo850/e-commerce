@@ -4,5 +4,5 @@ namespace Application.Contracts;
 
 public interface ICustomerRepository
 {
-    Task<Customer?> GetByIdAsync(int id);
+    Task<Customer?> GetByIdAsync(Guid id);
 }

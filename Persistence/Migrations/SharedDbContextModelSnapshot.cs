@@ -24,11 +24,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Customers.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -45,14 +43,12 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Orders.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -69,17 +65,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Orders.OrderItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quanitity")
                         .HasColumnType("int");
@@ -95,11 +89,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Products.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -171,8 +163,8 @@ namespace Persistence.Migrations
                 {
                     b.OwnsOne("Domain.ValueObjects.Money", "Price", b1 =>
                         {
-                            b1.Property<int>("ProductId")
-                                .HasColumnType("int");
+                            b1.Property<Guid>("ProductId")
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<decimal>("Cost")
                                 .HasColumnType("decimal(18,2)");

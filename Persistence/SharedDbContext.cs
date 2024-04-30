@@ -10,7 +10,7 @@ using Persistence.Models;
 
 namespace Persistence;
 
-internal class SharedDbContext : DbContext
+public class SharedDbContext : DbContext
 {
     public DbSet<Customer> Customers { get; set; }
     public DbSet<Order> Orders { get; set; }
@@ -43,54 +43,4 @@ internal class SharedDbContext : DbContext
             });
         modelBuilder.Entity<OutboxMessage>().ToTable(nameof(OutboxMessages));
     }
-
-    //public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    //{
-    //    using var transaction = Database.BeginTransaction();
-
-    //    try
-    //    {
-    //        var result = await base.SaveChangesAsync(cancellationToken);
-
-    //        var outboxMessages = ChangeTracker
-    //        .Entries<AggregateRoot>()
-    //        .Select(x => x.Entity)
-    //        .SelectMany(aggregateRoot =>
-    //        {
-    //            var domainEvents = aggregateRoot.GetDomainEvents();
-
-    //            aggregateRoot.ClearDomainEvents();
-
-    //            return domainEvents;
-    //        })
-    //        .Select(domainEvent => new OutboxMessage
-    //        (
-    //            Guid.NewGuid(),
-    //            domainEvent.GetType().Name,
-    //            JsonConvert.SerializeObject(
-    //                domainEvent,
-    //                new JsonSerializerSettings
-    //                {
-    //                    TypeNameHandling = TypeNameHandling.All
-    //                }),
-    //            DateTime.UtcNow,
-    //            null,
-    //            null
-    //        ))
-    //        .ToList();
-
-    //        Set<OutboxMessage>().AddRange(outboxMessages);
-    //        await base.SaveChangesAsync(cancellationToken);
-
-    //        transaction.Commit();
-
-    //        return result;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        transaction.Rollback();
-    //        throw;
-    //    }
-
-    //}
 }

@@ -6,7 +6,7 @@ using MediatR;
 namespace Application.Features.Orders.Commands.CreateOrder;
 
 public record CreateOrderCommand(
-    int CustomerId,
-    HashSet<Tuple<int, int>> OrderItems) : IRequest<Result>
+    Guid CustomerId,
+    HashSet<Tuple<Guid, int>> OrderItems) : IRequest<Result>
 { 
 }

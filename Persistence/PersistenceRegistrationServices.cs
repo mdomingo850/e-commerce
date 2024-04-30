@@ -18,8 +18,7 @@ public static class PersistenceRegistrationServices
                 var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
 
                 optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=SingleShared;Integrated Security=true;")
-                    //.AddInterceptors(interceptor)
-                    ;
+                    .AddInterceptors(interceptor);
             });
         services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
         services.AddScoped<IInventoryRepository, SqlInventoryRepository>();

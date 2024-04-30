@@ -2,21 +2,16 @@
 
 namespace Domain.Entities.Orders;
 
-public class OrderCreatedDomainEvent : DomainEvent
+public record OrderCreatedDomainEvent : IDomainEvent
 {
     public Guid Id { get; set; }
-    public Order Order { get; set; }
+    public Guid OrderId { get; set; }
     public OrderItem OrderItem { get; set; }
 
-    public OrderCreatedDomainEvent(Guid id, Order order, OrderItem orderItem) : base(id) 
+    public OrderCreatedDomainEvent(Guid id, Guid orderId, OrderItem orderItem)
     {
         Id = id;
-        Order = order;
+        OrderId = orderId;
         OrderItem = orderItem;
-    }
-
-    public override DomainEventMessage MapToMessage()
-    {
-        return new OrderCreatedDomainEventMessage(Id, Order.Id, OrderItem);
     }
 }
