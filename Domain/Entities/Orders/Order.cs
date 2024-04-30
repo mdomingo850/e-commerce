@@ -2,6 +2,8 @@
 using Domain.Entities.Products;
 using Domain.Primitives;
 using Domain.ValueObjects;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Domain.Entities.Orders;
 
@@ -50,6 +52,8 @@ public class Order : AggregateRoot
         int id = 0)
     {
         var order = new Order(id, customer, orderItems, orderDate, orderStatus);
+
+        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), order, order.OrderItems.First()));
 
         return order;
     }

@@ -3,8 +3,13 @@ using AutoMapper;
 using Domain.Entities.Customers;
 using Domain.Entities.Orders;
 using Domain.Entities.Products;
+using Domain.Primitives;
 using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Newtonsoft.Json;
+using Persistence.Models;
+using System.Threading;
 
 namespace Persistence.Repositories.SQLRepositories;
 
@@ -23,8 +28,50 @@ internal class SqlOrderRespository : IOrderRepository
 
     public async Task AddAsync(Order order)
     {
-        _dbContext.Orders.Add(order);
-        await _dbContext.SaveChangesAsync();
+        using var transaction = _dbContext.Database.BeginTransaction();
+
+        try
+        {
+            _dbContext.Orders.Add(order);
+            await _dbContext.SaveChangesAsync();
+
+            var outboxMessages = _dbContext.ChangeTracker
+                .Entries<AggregateRoot>()
+                .Select(x => x.Entity)
+                .SelectMany(aggregateRoot =>
+                {
+                    var domainEvents = aggregateRoot.GetDomainEvents();
+
+                    aggregateRoot.ClearDomainEvents();
+
+                    return domainEvents;
+                })
+                .Select(domainEvent => new OutboxMessage
+                (
+                    Guid.NewGuid(),
+                    domainEvent.GetType().Name,
+                    JsonConvert.SerializeObject(
+                        domainEvent,
+                        new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All
+                        }),
+                    DateTime.UtcNow,
+                null,
+                    null
+                ))
+                .ToList();
+
+            _dbContext.Set<OutboxMessage>().AddRange(outboxMessages);
+            await _dbContext.SaveChangesAsync();
+
+            transaction.Commit();
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
 
     public async Task<Order?> GetByIdAsync(int id)

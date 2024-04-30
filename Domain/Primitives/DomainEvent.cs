@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Domain.Primitives;
 
-namespace Domain.Primitives
+public abstract class DomainEvent(Guid Id)
 {
-    internal class DomainEvent
-    {
-    }
+    public abstract DomainEventMessage MapToMessage();
 }

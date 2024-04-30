@@ -11,7 +11,7 @@ public static class ApplicationRegistrationServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<INotificationHandler<OrderCreatedEvent>, SendOrderConfirmationEventHandler>();
+        //services.AddScoped<INotificationHandler<OrderCreatedEvent>, SendOrderConfirmationEventHandler>();
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssemblies(typeof(ApplicationRegistrationServices).Assembly);
