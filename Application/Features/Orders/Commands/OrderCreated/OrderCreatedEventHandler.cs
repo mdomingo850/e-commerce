@@ -9,24 +9,15 @@ namespace Application.Features.Orders.Commands.OrderCreated;
 
 internal class OrderCreatedEventHandler : INotificationHandler<OrderCreatedDomainEvent>
 {
-    private readonly ICustomerRepository _customerRepository;
     private readonly IOrderRepository _orderRepository;
     private readonly IPaymentService _paymentService;
-    private readonly IInventoryRepository _inventoryRepository;
-    private readonly INotificationService _notificationService;
 
     public OrderCreatedEventHandler(
-        ICustomerRepository customerRepository,
         IOrderRepository orderRepository,
-        IPaymentService paymentService,
-        IInventoryRepository inventoryRepository,
-        INotificationService notification)
+        IPaymentService paymentService)
     {
-        _customerRepository = customerRepository;
         _orderRepository = orderRepository;
         _paymentService = paymentService;
-        _inventoryRepository = inventoryRepository;
-        _notificationService = notification;
     }
 
     public async Task Handle(OrderCreatedDomainEvent notification, CancellationToken cancellationToken)
@@ -37,9 +28,6 @@ internal class OrderCreatedEventHandler : INotificationHandler<OrderCreatedDomai
         {
             return;
         }
-
-        //send confirmation email
-        var sendNotificationResult = await _notificationService.SendAsync();
 
         //payment processing
         var payResult = await _paymentService.PayAsync();

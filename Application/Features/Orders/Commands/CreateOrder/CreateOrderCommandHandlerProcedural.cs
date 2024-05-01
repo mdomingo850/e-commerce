@@ -95,7 +95,7 @@ public class CreateOrderCommandHandlerProcedural
         {
             order.UpdateOrderStatus(OrderStatus.PaymentFailed);
             await _orderRepository.UpdateAsync(order);
-            return Result.Error([..  payResult.Errors]);
+            return Result.Error([.. payResult.Errors]);
         }
 
         //inventory stock reduction
@@ -105,8 +105,8 @@ public class CreateOrderCommandHandlerProcedural
         if (!reserveProductsResult.IsSuccess)
         {
             var undoPaymentResult = await _paymentService.UndoPaymentAsync();
-            
-            if (!undoPaymentResult.IsSuccess) 
+
+            if (!undoPaymentResult.IsSuccess)
             {
                 //handle undo payment error logic
             }

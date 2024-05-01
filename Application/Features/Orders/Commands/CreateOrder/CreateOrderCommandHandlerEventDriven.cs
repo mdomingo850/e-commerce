@@ -8,7 +8,7 @@ namespace Application.Features.Orders.Commands.CreateOrder;
 
 /// <summary>
 /// Pros:
-///     Performance - Faster response time. 
+///     Performance - Faster response time. Better UX 
 ///                     Resources are freed. 
 ///                     No Timeout issues
 ///     Single responsibility - Only responsible for creating order
@@ -29,7 +29,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
     private readonly IPaymentService _paymentService;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly INotificationService _notificationService;
-    private readonly IPublisher _mediator;
+    private readonly IPublisher _publisher;
 
     public CreateOrderCommandHandler(
         ICustomerRepository customerRepository, 
@@ -37,14 +37,14 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         IPaymentService paymentService,
         IInventoryRepository inventoryRepository,
         INotificationService notification,
-        IPublisher mediator)
+        IPublisher publisher)
     {
         _customerRepository = customerRepository;
         _orderRepository = orderRepository;
         _paymentService = paymentService;
         _inventoryRepository = inventoryRepository;
         _notificationService = notification;
-        _mediator = mediator;
+        _publisher = publisher;
     }
 
     public async Task<Result> Handle(
@@ -85,6 +85,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
 
         await _orderRepository.AddAsync(order);
+
+        //await _publisher.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
 
         return Result.Success();
     }
