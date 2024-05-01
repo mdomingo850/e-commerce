@@ -101,9 +101,6 @@ public class CreateOrderCommandHandlerProcedural
         //inventory stock reduction
         var reserveProductsResult = product.ReserveProducts(firstProductQuanitity);
 
-        if (reserveProductsResult.IsSuccess)
-            await _inventoryRepository.UpdateProductAsync(product);
-
         //roll back payment processing
         if (!reserveProductsResult.IsSuccess)
         {
@@ -118,6 +115,9 @@ public class CreateOrderCommandHandlerProcedural
             await _orderRepository.UpdateAsync(order);
             return Result.Error([.. reserveProductsResult.Errors]);
         }
+
+        order.UpdateOrderStatus(OrderStatus.ProductReserved);
+        await _orderRepository.UpdateAsync(order);
 
         return Result.Success();
     }
