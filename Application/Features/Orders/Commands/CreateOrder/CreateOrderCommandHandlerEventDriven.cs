@@ -8,14 +8,14 @@ namespace Application.Features.Orders.Commands.CreateOrder;
 
 /// <summary>
 /// Pros:
+///     Single responsibility - Only responsible for creating order
+///     Extensible - If I want to add a Recommendation service, I do not have to modify this create order service
 ///     Performance - Faster response time. Better UX 
 ///                     Resources are freed. 
 ///                     No Timeout issues
-///     Single responsibility - Only responsible for creating order
 ///     Loose coupling - Each service is unaware of each other. Easier to maintain as application/team scales. 
 ///         Loose Temporal coupling due to async communication
 ///     High Availability - If the payment service is down, then you can still create orders. If order service is down, then you can still process existing orders.
-///     Extensible - If I want to add a Recommendation service, I do not have to modify this create order service
 /// Cons:
 ///     Asynchronous - Not as easy to follow
 ///     Latency - Network or messaging latency
@@ -28,31 +28,32 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
     private readonly IOrderRepository _orderRepository;
     private readonly IPaymentService _paymentService;
     private readonly IInventoryRepository _inventoryRepository;
-    private readonly INotificationService _notificationService;
     private readonly IPublisher _publisher;
+    private readonly IMessageBus _messageBus;
 
     public CreateOrderCommandHandler(
         ICustomerRepository customerRepository, 
         IOrderRepository orderRepository,
         IPaymentService paymentService,
         IInventoryRepository inventoryRepository,
-        INotificationService notification,
-        IPublisher publisher)
+        IPublisher publisher,
+        IMessageBus messageBus)
     {
         _customerRepository = customerRepository;
         _orderRepository = orderRepository;
         _paymentService = paymentService;
         _inventoryRepository = inventoryRepository;
-        _notificationService = notification;
         _publisher = publisher;
+        _messageBus = messageBus;
     }
 
     public async Task<Result> Handle(
         CreateOrderCommand request, 
         CancellationToken cancellationToken = default)
     {
-        //get customer by id
-        var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+		#region Validation
+		//get customer by id
+		var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
 
         if (customer is null)
             return Result.NotFound();
@@ -79,15 +80,15 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         var firstProductQuanitity = firstOrderItem.Item2;
         if (!product.IsInStock(firstProductQuanitity))
             return Result.Conflict();
-
-        var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
+		#endregion
+		var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
 
         var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
 
         await _orderRepository.AddAsync(order);
 
-        //await _publisher.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
-
+        await _publisher.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
+        //await _messageBus.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
         return Result.Success();
     }
 }

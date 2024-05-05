@@ -8,14 +8,14 @@ namespace Application.Features.Orders.Commands.CreateOrder;
 
 /// <summary>
 /// Cons:
+///     Single responsibility - This class is responsible for creating the order and processing the order
+///                             Hard to maintain the processing logic and the compensation rollback logic
+///     Not as Extensible - If I want to add a Recommendation service, I would have to modify this create order service
 ///     Performance - One request is long running - bad UX. 
 ///                     It also holding on to the resources for a long time. 
 ///                     Timeout issues
-///     Single responsibility - This class is responsible for creating the order and processing the order
-///                             Hard to maintain the processing logic and the compensation rollback logic
 ///     Tight coupling - Each service is coupled to each other. Harder to maintain as application/team scales.
 ///     Low Availability - If the payment service is down, then no one can create orders.
-///     Not as Extensible - If I want to add a Recommendation service, I would have to modify this create order service
 /// Pros:
 ///     Atomic - Saved as a single transaction
 ///     Synchronous - Easy to follow
@@ -49,9 +49,9 @@ public class CreateOrderCommandHandlerProcedural
         CreateOrderCommand request, 
         CancellationToken cancellationToken = default)
     {
-
-        //get customer by id
-        var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+		#region Validation
+		//get customer by id
+		var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
 
         if (customer is null)
             return Result.NotFound();
@@ -78,8 +78,8 @@ public class CreateOrderCommandHandlerProcedural
         var firstProductQuanitity = firstOrderItem.Item2;
         if (!product.IsInStock(firstProductQuanitity))
             return Result.Conflict();
-
-        var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
+		#endregion
+		var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
 
         var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
 
