@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿//using MediatR;
 
-namespace Application.Events;
+//namespace Application.Events;
 
-internal record ProductsReservedEvent(Guid OrderId) : INotification
-{
-}
+//internal record ProductsReservedEvent(Guid OrderId) : INotification
+//{
+//}

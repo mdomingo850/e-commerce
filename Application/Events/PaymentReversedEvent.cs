@@ -1,5 +1,5 @@
-﻿namespace Application.Events;
+﻿//namespace Application.Events;
 
-internal record PaymentReversedEvent(Guid OrderId)
-{
-}
+//internal record PaymentReversedEvent(Guid OrderId)
+//{
+//}

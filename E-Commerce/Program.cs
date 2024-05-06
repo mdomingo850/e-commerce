@@ -1,15 +1,18 @@
-using Infrastructure;
 using Persistence;
 using Application;
 using Serilog;
+using Modules.Customers.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services
-    .AddInfrastructureServices()
-    .AddRepositoryServices()
-    .AddApplicationServices();
+    .AddCustomerModuleServices()
+    .AddInventoryModuleServices()
+    .AddOrderModuleServices()
+    .AddPaymentModuleServices()
+    .AddRepositoryServices();
+    //.AddApplicationServices();
 
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 

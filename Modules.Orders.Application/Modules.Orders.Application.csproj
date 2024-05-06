@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Modules.Customers.Api\Modules.Customers.Api.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.Api\Modules.Inventories.Api.csproj" />
+    <ProjectReference Include="..\Modules.Orders.Domain\Modules.Orders.Domain.csproj" />
+    <ProjectReference Include="..\Modules.Payments.Api\Modules.Payments.Api.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-﻿using Domain.Primitives;
+﻿using SharedKernel.Domain.Entities.Primitives;
 
 namespace Application.Contracts;
 

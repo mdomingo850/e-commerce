@@ -1,9 +1,4 @@
-﻿using Application.Events;
-using Application.Features.Notifications.Commands;
-using MediatR;
-using MediatR.NotificationPublishers;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 

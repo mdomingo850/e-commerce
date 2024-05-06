@@ -1,5 +1,5 @@
-﻿namespace Application.Events;
+﻿//namespace Application.Events;
 
-internal record ReserveProductsFailedEvent(Guid OrderId)
-{
-}
+//internal record ReserveProductsFailedEvent(Guid OrderId)
+//{
+//}

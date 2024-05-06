@@ -1,8 +1,7 @@
-﻿using Domain.Primitives;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage.Json;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 using Persistence.Models;
+using SharedKernel.Domain.Entities.Primitives;
 
 namespace Persistence.Interceptors;
 
