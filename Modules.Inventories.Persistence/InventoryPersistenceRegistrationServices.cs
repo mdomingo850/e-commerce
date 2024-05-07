@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Inventories.Application.Contracts;
 using Modules.Inventories.Persistence.Reposiories;
-using Persistence.Interceptors;
 
 namespace Modules.Inventories.Persistence;
 
@@ -13,10 +12,8 @@ public static class InventoryPersistenceRegistrationServices
         services.AddDbContext<InventoryDbContext>(
             (sp, optionsBuilder) =>
             {
-                var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
 
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Inventory;Integrated Security=true;")
-                    .AddInterceptors(interceptor);
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Inventory;Integrated Security=true;");
             });
         services.AddScoped<IInventoryRepository, SqlInventoryRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

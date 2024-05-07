@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Persistence;
+using Modules.Orders.Persistence.Models;
 using Newtonsoft.Json;
-using Persistence.Models;
 using Quartz;
 using SharedKernel.Domain.Entities.Primitives;
 
-namespace Infrastructure.BackgroundJobs;
+namespace Modules.Orders.Infrastructure.BackgroundJobs;
 
 [DisallowConcurrentExecution]
 public class ProcessOutboxMessagesJob : IJob

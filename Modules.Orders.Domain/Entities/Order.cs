@@ -35,6 +35,7 @@ public class Order : AggregateRoot
         DateTime orderDate,
         OrderStatus orderStatus) : base(id)
     {
+        CustomerId = customer.Id;
         Customer = customer;
         _orderItems = orderItems;
         OrderDate = orderDate;
@@ -63,7 +64,7 @@ public class Order : AggregateRoot
     {
         var order = new Order(id, customer, orderItems, orderDate, orderStatus);
 
-        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), id, order.OrderItems.First()));
+        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), id));
 
         return order;
     }

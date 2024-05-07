@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Customers.Application.Contracts;
 using Modules.Customers.Persistence.Repositories;
-using Persistence.Interceptors;
 
 namespace Modules.Customers.Persistence;
 
@@ -13,10 +12,7 @@ public static class PersistenceRegistrationServices
         services.AddDbContext<CustomerDbContext>(
             (sp, optionsBuilder) =>
             {
-                var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
-
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Customer;Integrated Security=true;")
-                    .AddInterceptors(interceptor);
+                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Customer;Integrated Security=true;");
             });
         services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
         return services;

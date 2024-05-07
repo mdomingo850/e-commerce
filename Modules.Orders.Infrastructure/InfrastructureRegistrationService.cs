@@ -1,12 +1,12 @@
-﻿using Infrastructure.BackgroundJobs;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Modules.Orders.Infrastructure.BackgroundJobs;
 using Quartz;
 
-namespace Infrastructure;
+namespace Modules.Orders.Infrastructure;
 
 public static class InfrastructureRegistrationService
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddOrderInfrastructureServices(this IServiceCollection services)
     {
         services.AddQuartz(configure =>
         {

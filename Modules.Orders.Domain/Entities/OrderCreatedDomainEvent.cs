@@ -6,12 +6,10 @@ public record OrderCreatedDomainEvent : IDomainEvent
 {
     public Guid Id { get; set; }
     public Guid OrderId { get; set; }
-    public OrderItem OrderItem { get; set; }
 
-    public OrderCreatedDomainEvent(Guid id, Guid orderId, OrderItem orderItem)
+    public OrderCreatedDomainEvent(Guid id, Guid orderId)
     {
         Id = id;
         OrderId = orderId;
-        OrderItem = orderItem;
     }
 }

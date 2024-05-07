@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Modules.Orders.Domain.Entities;
-using Persistence.Models;
+using Modules.Orders.Persistence.Models;
 
 namespace Modules.Orders.Persistence;
 

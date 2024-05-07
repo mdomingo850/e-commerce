@@ -21,8 +21,8 @@ internal sealed class PaymentsApi(IPaymentService paymentService) : IPaymentsApi
 
     public async Task<Result<bool>> ValidatePaymentOptionAsync()
     {
-        await paymentService.ValidatePaymentOptionAsync();
+        var validatePaymentOptionsResult =  await paymentService.ValidatePaymentOptionAsync();
 
-        return Result.Success();
+        return Result.Success(validatePaymentOptionsResult.Value);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application;
 using Microsoft.Extensions.DependencyInjection;
 using Modules.Orders.Persistence;
+using Modules.Orders.Infrastructure;
 
 namespace Modules.Customers.Api;
 
@@ -10,7 +11,8 @@ public static class OrderModuleRegistrationServices
     {
         services
             .AddOrderRepositoryServices()
-            .AddOrderApplicationServices();
+            .AddOrderApplicationServices()
+            .AddOrderInfrastructureServices();
         return services;
     }
 }

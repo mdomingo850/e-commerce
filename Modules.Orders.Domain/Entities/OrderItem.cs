@@ -10,6 +10,7 @@ public sealed class OrderItem : Entity
     {
         Product = product;
         Quanitity = quanitity;
+        ProductId = product.Id;
     }
 
     public static OrderItem Create(Guid id, Product product, int quantity)

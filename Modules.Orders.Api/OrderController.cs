@@ -23,8 +23,8 @@ public class OrderController : ControllerBase
     [HttpPost(Name = "Order")]
     public async Task<Result> Create()
     {
-        var orderItems = new HashSet<Tuple<Guid, int>>() { new Tuple<Guid, int>(Guid.Parse("F73B3C15-51E8-4763-AE29-B4F6B7714A8D"), 5) };
-        var command = new CreateOrderCommand(Guid.Parse("BB9E1061-BD8E-414D-BDEB-1C20904E3149"), orderItems);
+        var orderItems = new HashSet<Tuple<Guid, int>>() { new Tuple<Guid, int>(Guid.Parse("5F341EC0-38F2-4A3E-84D7-1EB51885A95D"), 5) };
+        var command = new CreateOrderCommand(Guid.Parse("AC8572BA-8742-43BE-AC63-FD69654A7188"), orderItems);
 
         var response = await _mediator.Send(command);
 

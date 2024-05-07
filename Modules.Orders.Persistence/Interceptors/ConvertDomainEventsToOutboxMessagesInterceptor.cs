@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Modules.Orders.Persistence.Models;
 using Newtonsoft.Json;
-using Persistence.Models;
 using SharedKernel.Domain.Entities.Primitives;
 
-namespace Persistence.Interceptors;
+namespace Modules.Orders.Persistence.Interceptors;
 
 public sealed class ConvertDomainEventsToOutboxMessagesInterceptor : SaveChangesInterceptor
 {

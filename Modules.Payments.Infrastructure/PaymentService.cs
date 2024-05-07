@@ -23,6 +23,6 @@ public class PaymentService : IPaymentService
     {
         await Task.Delay(3000);
 
-        return Result.Success();
+        return Result.Success(true);
     }
 }
