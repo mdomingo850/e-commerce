@@ -26,7 +26,7 @@ internal class SqlOrderRespository : IOrderRepository
 
     public async Task<Order?> GetByIdAsync(Guid id)
     {
-        var orderModel = await _dbContext.Orders.SingleOrDefaultAsync(x => x.Id == id);
+        var orderModel = await _dbContext.Orders.Include(o => o.OrderItems).SingleOrDefaultAsync(x => x.Id == id);
 
         if (orderModel == null)
         {

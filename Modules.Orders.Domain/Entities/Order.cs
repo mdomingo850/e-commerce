@@ -1,4 +1,5 @@
-﻿using SharedKernel.Domain.Entities.Primitives;
+﻿using Newtonsoft.Json;
+using SharedKernel.Domain.Entities.Primitives;
 using SharedKernel.Domain.Entities.ValueObjects;
 
 namespace Modules.Orders.Domain.Entities;
