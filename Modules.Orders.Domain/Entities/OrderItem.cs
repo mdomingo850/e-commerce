@@ -24,6 +24,11 @@ public sealed class OrderItem : Entity
     {
         return new OrderItem(id, product, quantity);
     }
+
+    public void UpdateProduct(Product product)
+    {
+        Product = product;
+    }
     public Guid ProductId { get; init; }
     public Product Product { get; private set; }
     public int Quanitity { get; private set; }

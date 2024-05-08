@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Modules.Inventories.Api;
 using Modules.Orders.Application.Contracts;
 using Modules.Orders.Domain.Entities;
 using Modules.Payments.Api;
@@ -7,15 +8,18 @@ namespace Modules.Orders.Application.Features.OrderCreated;
 
 internal class OrderCreatedEventHandler : INotificationHandler<OrderCreatedDomainEvent>
 {
-    private readonly IOrderRepository _orderRepository;
+    private readonly IOrderService _orderRepository;
     private readonly IPaymentsApi _paymentsApi;
+    private readonly IInventoriesApi _inventoriesApi;
 
     public OrderCreatedEventHandler(
-        IOrderRepository orderRepository,
-        IPaymentsApi paymentsApi)
+        IOrderService orderRepository,
+        IPaymentsApi paymentsApi,
+        IInventoriesApi inventoriesApi)
     {
         _orderRepository = orderRepository;
         _paymentsApi = paymentsApi;
+        _inventoriesApi = inventoriesApi;
     }
 
     public async Task Handle(OrderCreatedDomainEvent notification, CancellationToken cancellationToken)
@@ -58,6 +62,10 @@ internal class OrderCreatedEventHandler : INotificationHandler<OrderCreatedDomai
             await _orderRepository.UpdateAsync(order);
             return;
         }
+
+
+        var updateProductRequest = new UpdateProductRequest(product.Id, firstProductQuanitity);
+        await _inventoriesApi.UpdateProductAsync(updateProductRequest);
 
         order.UpdateOrderStatus(OrderStatus.ProductReserved);
         await _orderRepository.UpdateAsync(order);

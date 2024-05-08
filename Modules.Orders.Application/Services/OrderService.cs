@@ -1,10 +1,11 @@
 ﻿using Modules.Customers.Api;
+using Modules.Inventories.Application.Contracts;
 using Modules.Orders.Application.Contracts;
 using Modules.Orders.Domain.Entities;
 
 namespace Modules.Orders.Application.Services;
 
-internal sealed class OrderService(IOrderRepository orderRepository, ICustomersApi customersApi) : IOrderService
+internal sealed class OrderService(IOrderRepository orderRepository, ICustomersApi customersApi, IInventoryRepository inventoryApi) : IOrderService
 {
     public async Task<Order?> GetByIdAsync(Guid id)
     {
@@ -26,6 +27,18 @@ internal sealed class OrderService(IOrderRepository orderRepository, ICustomersA
 
         order.UpdateCustomer(customer);
 
+        foreach (var orderItem in order.OrderItems)
+        {
+            var productResponse = await inventoryApi.GetProductByIdAsync(orderItem.ProductId);
+            var product = Product.Create(productResponse.Id, productResponse.Name, productResponse.Price, productResponse.Quantity);
+            orderItem.UpdateProduct(product);
+        }
+
         return order;
+    }
+
+    public async Task UpdateAsync(Order order)
+    {
+        await orderRepository.UpdateAsync(order);
     }
 }

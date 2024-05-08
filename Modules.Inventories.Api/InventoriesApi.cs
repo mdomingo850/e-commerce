@@ -19,8 +19,17 @@ internal sealed class InventoriesApi : IInventoriesApi
         return product is null ? null : new ProductResponse(product.Id, product.Name, product.Price, product.Quantity);
     }
 
-    public Task UpdateProductAsync(Product product)
+    public async Task UpdateProductAsync(UpdateProductRequest productRequest)
     {
-        throw new NotImplementedException();
+        var product = await _inventoryRepository.GetProductByIdAsync(productRequest.Id);
+
+        if (product is null)
+        {
+            return;
+        }
+
+        product.ReserveProducts(productRequest.QuantityReservedAmount);
+
+        await _inventoryRepository.UpdateProductAsync(product);
     }
 }
