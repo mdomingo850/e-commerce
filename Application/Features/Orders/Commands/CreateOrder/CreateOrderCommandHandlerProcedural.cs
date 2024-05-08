@@ -45,7 +45,7 @@ public class CreateOrderCommandHandlerProcedural
         _notificationService = notification;
     }
 
-    public async Task<Result> Handler(
+    public async Task<Result> Handle(
         CreateOrderCommand request, 
         CancellationToken cancellationToken = default)
     {

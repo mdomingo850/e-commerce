@@ -23,7 +23,7 @@ public static class InfrastructureRegistrationService
         });
 
         services.AddQuartzHostedService();
-
+        services.AddScoped<IMessageBus, RabbitMQ>();
         return services;
     }
 }
