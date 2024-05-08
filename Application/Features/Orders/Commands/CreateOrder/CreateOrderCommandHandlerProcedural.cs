@@ -79,22 +79,12 @@ public class CreateOrderCommandHandlerProcedural
         if (!product.IsInStock(firstProductQuanitity))
             return Result.Conflict();
 		#endregion
-		var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
-
-        var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
-
-        await _orderRepository.AddAsync(order);
-
-        //send confirmation email
-        var sendNotificationResult = await _notificationService.SendAsync();
 
         //payment processing
         var payResult = await _paymentService.PayAsync();
 
         if (!payResult.IsSuccess)
         {
-            order.UpdateOrderStatus(OrderStatus.PaymentFailed);
-            await _orderRepository.UpdateAsync(order);
             return Result.Error([.. payResult.Errors]);
         }
 
@@ -111,13 +101,20 @@ public class CreateOrderCommandHandlerProcedural
                 //handle undo payment error logic
             }
 
-            order.UpdateOrderStatus(OrderStatus.InventoryReserveFailed);
-            await _orderRepository.UpdateAsync(order);
             return Result.Error([.. reserveProductsResult.Errors]);
         }
 
+        //create the order
+        var orderItem = OrderItem.Create(Guid.NewGuid(), product, firstProductQuanitity);
+
+        var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
+
         order.UpdateOrderStatus(OrderStatus.ProductReserved);
-        await _orderRepository.UpdateAsync(order);
+
+        await _orderRepository.AddAsync(order);
+
+        //send confirmation email
+        var sendNotificationResult = await _notificationService.SendAsync();
 
         return Result.Success();
     }
