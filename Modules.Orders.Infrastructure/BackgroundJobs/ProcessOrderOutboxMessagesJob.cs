@@ -27,8 +27,12 @@ public class ProcessOutboxMessagesJob : IJob
         var messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null)
             .Take(20).ToListAsync(context.CancellationToken);
 
-        foreach (var message in messages)
+        var publishers = new Task[20];
+
+        for (int i = 0; i < messages.Count; i++)
         {
+            var message = messages[i];
+
             var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
                 new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
@@ -39,11 +43,13 @@ public class ProcessOutboxMessagesJob : IJob
                 continue;
             }
 
-            await _publisher.Publish(domainEvent, context.CancellationToken);
+            publishers[i] =  _publisher.Publish(domainEvent, context.CancellationToken);
 
-            message.ProcessedOn = DateTime.UtcNow;
         }
 
+        foreach (var message in messages) {
+            message.ProcessedOn = DateTime.UtcNow;
+        }
         await _dbContext.SaveChangesAsync();
     }
 }
