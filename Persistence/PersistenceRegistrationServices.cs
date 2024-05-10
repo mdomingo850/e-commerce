@@ -19,7 +19,7 @@ public static class PersistenceRegistrationServices
 
                 optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=SingleShared;Integrated Security=true;")
                     .AddInterceptors(interceptor);
-            });
+            }, ServiceLifetime.Scoped);
         services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
         services.AddScoped<IInventoryRepository, SqlInventoryRepository>();
         services.AddScoped<IOrderRepository, SqlOrderRespository>();
