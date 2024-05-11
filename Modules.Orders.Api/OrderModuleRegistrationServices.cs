@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Modules.Orders.Persistence;
 using Modules.Orders.Infrastructure;
 
-namespace Modules.Customers.Api;
+namespace Modules.Orders.Api;
 
 public static class OrderModuleRegistrationServices
 {

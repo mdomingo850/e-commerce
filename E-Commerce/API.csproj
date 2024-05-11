@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
     <RootNamespace>E_Commerce</RootNamespace>
+    <UserSecretsId>f6f6580a-5007-4dd4-b154-508f9ffd0c6d</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -24,6 +28,7 @@
     <ProjectReference Include="..\Modules.Customers.Api\Modules.Customers.Api.csproj" />
     <ProjectReference Include="..\Modules.Inventories.Api\Modules.Inventories.Api.csproj" />
     <ProjectReference Include="..\Modules.Orders.Api\Modules.Orders.Api.csproj" />
+    <ProjectReference Include="..\Modules.Payments.Api\Modules.Payments.Api.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 

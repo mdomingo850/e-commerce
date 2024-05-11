@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Modules.Payments.Api;
 using Modules.Payments.Infrastructure;
 
-namespace Modules.Customers.Api;
+namespace Modules.Payments.Api;
 
 public static class PaymentModuleRegistrationServices
 {

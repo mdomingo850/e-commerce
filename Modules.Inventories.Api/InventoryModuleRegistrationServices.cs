@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Modules.Inventories.Api;
 using Modules.Inventories.Persistence;
 
-namespace Modules.Customers.Api;
+namespace Modules.Inventories.Api;
 
 public static class InventoryModuleRegistrationServices
 {

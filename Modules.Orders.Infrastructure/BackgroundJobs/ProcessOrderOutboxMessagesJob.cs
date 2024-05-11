@@ -22,17 +22,44 @@ public class ProcessOutboxMessagesJob : IJob
         _publisher = publisher;
     }
 
+    //public async Task Execute(IJobExecutionContext context)
+    //{
+    //    var messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null)
+    //        .Take(20).ToListAsync(context.CancellationToken);
+
+    //    var publishers = new Task[20];
+
+    //    for (int i = 0; i < messages.Count; i++)
+    //    {
+    //        var message = messages[i];
+
+    //        var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
+    //            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+
+
+    //        if (domainEvent is null)
+    //        {
+    //            //Add logging
+    //            continue;
+    //        }
+
+    //        publishers[i] =  _publisher.Publish(domainEvent, context.CancellationToken);
+
+    //    }
+
+    //    foreach (var message in messages) {
+    //        message.ProcessedOn = DateTime.UtcNow;
+    //    }
+    //    await _dbContext.SaveChangesAsync();
+    //}
+
     public async Task Execute(IJobExecutionContext context)
     {
         var messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null)
             .Take(20).ToListAsync(context.CancellationToken);
 
-        var publishers = new Task[20];
-
-        for (int i = 0; i < messages.Count; i++)
+        foreach (var message in messages)
         {
-            var message = messages[i];
-
             var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
                 new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
@@ -43,13 +70,11 @@ public class ProcessOutboxMessagesJob : IJob
                 continue;
             }
 
-            publishers[i] =  _publisher.Publish(domainEvent, context.CancellationToken);
+            await _publisher.Publish(domainEvent, context.CancellationToken);
 
-        }
-
-        foreach (var message in messages) {
             message.ProcessedOn = DateTime.UtcNow;
         }
+
         await _dbContext.SaveChangesAsync();
     }
 }
