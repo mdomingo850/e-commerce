@@ -1,11 +1,11 @@
 ﻿using Modules.Customers.Api;
-using Modules.Inventories.Application.Contracts;
+using Modules.Inventories.Api;
 using Modules.Orders.Application.Contracts;
 using Modules.Orders.Domain.Entities;
 
 namespace Modules.Orders.Application.Services;
 
-internal sealed class OrderService(IOrderRepository orderRepository, ICustomersApi customersApi, IInventoryRepository inventoryApi) : IOrderService
+internal sealed class OrderService(IOrderRepository orderRepository, ICustomersApi customersApi, IInventoriesApi inventoryApi) : IOrderService
 {
     public async Task<Order?> GetByIdAsync(Guid id)
     {

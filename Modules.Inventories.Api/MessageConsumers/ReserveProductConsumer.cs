@@ -3,7 +3,6 @@ using MediatR;
 using Modules.Inventories.Application.Features.Commands.ReserveProduct;
 using Modules.Inventories.IntegrationEvents;
 using Modules.Orders.IntegrationEvents;
-using Modules.Payments.IntegrationEvents;
 
 namespace Modules.Inventories.Api.MessageConsumers;
 

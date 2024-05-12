@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Modules.Orders.Test\Modules.Orders.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Modules.Customers.Api\Modules.Customers.Api.csproj" />
     <ProjectReference Include="..\Modules.Inventories.Api\Modules.Inventories.Api.csproj" />
     <ProjectReference Include="..\Modules.Orders.Domain\Modules.Orders.Domain.csproj" />

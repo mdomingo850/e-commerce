@@ -35,22 +35,19 @@ public class OrderProcessingSaga : MassTransitStateMachine<OrderProcessingSagaDa
                     context.Saga.OrderId = context.Message.OrderId;
                 })
                 .TransitionTo(OrderConfirmationEmailSending)
-                .Publish(context => new SendOrderConfirmationEmail(context.Message.OrderId))
-        );
+                .Publish(context => new SendOrderConfirmationEmail(context.Message.OrderId)));
 
         During(OrderConfirmationEmailSending,
             When(OrderConfirmationEmailSent)
                 .Then(context => context.Saga.OrderConfirmationEmailSent = true)
                 .TransitionTo(PayingOrder)
-                .Publish(context => new PayOrder(context.Message.OrderId))
-            );
+                .Publish(context => new PayOrder(context.Message.OrderId)));
 
         During(PayingOrder,
             When(OrderPaid)
                 .Then(context => context.Saga.OrderPaid = true)
                 .TransitionTo(ProductReserving)
-                .Publish(context => new ReserveProduct(context.Message.OrderId))
-            );
+                .Publish(context => new ReserveProduct(context.Message.OrderId)));
 
         During(ProductReserving,
             When(ProductReserved)
@@ -62,6 +59,5 @@ public class OrderProcessingSaga : MassTransitStateMachine<OrderProcessingSagaDa
                 .TransitionTo(OrderProcessing)
                 .Publish(context => new CompleteOrderProcessing(context.Message.OrderId))
                 .Finalize());
-
     }
 }

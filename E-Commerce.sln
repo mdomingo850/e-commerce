@@ -5,8 +5,6 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "E-Commerce\API.csproj", "{7671A419-A484-4E5B-BC32-15D89A73C197}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{CAE38269-0625-41D4-A580-1ADED69349AD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{04F94A8B-D372-4243-A383-DE732F4ED289}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Inventories", "Inventories", "{EB57D2B8-5E74-4F31-8844-CD267C22A54E}"
@@ -75,7 +73,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Payments.Integratio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Inventories.IntegrationEvents", "Modules.Inventories.IntegrationEvents\Modules.Inventories.IntegrationEvents.csproj", "{457F91C9-6AE5-4781-8955-9DA7BB8FAAEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules.Notifications.IntegrationEvents", "Modules.Notifications.IntegrationEvents\Modules.Notifications.IntegrationEvents.csproj", "{B9362F16-B0CD-450C-AFFC-07457482B472}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Notifications.IntegrationEvents", "Modules.Notifications.IntegrationEvents\Modules.Notifications.IntegrationEvents.csproj", "{B9362F16-B0CD-450C-AFFC-07457482B472}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,10 +85,6 @@ Global
 		{7671A419-A484-4E5B-BC32-15D89A73C197}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7671A419-A484-4E5B-BC32-15D89A73C197}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7671A419-A484-4E5B-BC32-15D89A73C197}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CAE38269-0625-41D4-A580-1ADED69349AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CAE38269-0625-41D4-A580-1ADED69349AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CAE38269-0625-41D4-A580-1ADED69349AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CAE38269-0625-41D4-A580-1ADED69349AD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{58A7B76F-FD86-42C8-A85C-0386BF5737FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{58A7B76F-FD86-42C8-A85C-0386BF5737FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58A7B76F-FD86-42C8-A85C-0386BF5737FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
