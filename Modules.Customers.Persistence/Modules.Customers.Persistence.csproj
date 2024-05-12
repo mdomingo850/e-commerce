@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Customers.Application\Modules.Customers.Application.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
 </Project>

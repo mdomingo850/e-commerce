@@ -64,7 +64,37 @@ namespace Modules.Orders.Persistence.Migrations
                     b.ToTable("OrderItem", (string)null);
                 });
 
-            modelBuilder.Entity("Persistence.Models.OutboxMessage", b =>
+            modelBuilder.Entity("Modules.Orders.Domain.Entities.OrderProcessingSagaData", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("OrderConfirmationEmailSent")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("OrderPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("OrderProcessingCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ProductReserved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CorrelationId");
+
+                    b.ToTable("SagaData", (string)null);
+                });
+
+            modelBuilder.Entity("Modules.Orders.Persistence.Models.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

@@ -9,6 +9,7 @@ public class OrderDbContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<OrderProcessingSagaData> SagaData { get; set; }
 
 
     public OrderDbContext()
@@ -27,5 +28,6 @@ public class OrderDbContext : DbContext
         modelBuilder.Entity<Order>().ToTable(nameof(Order)).Ignore(o => o.Customer);
         modelBuilder.Entity<OrderItem>().ToTable(nameof(OrderItem)).Ignore(oi => oi.Product);
         modelBuilder.Entity<OutboxMessage>().ToTable(nameof(OutboxMessages));
+        modelBuilder.Entity<OrderProcessingSagaData>().ToTable(nameof(SagaData)).HasKey(x => x.CorrelationId);
     }
 }

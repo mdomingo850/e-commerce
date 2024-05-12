@@ -1,0 +1,2 @@
+Add-Migration <NAME_OF_MIGRATION> -Context <NAME_OF_DBCONTEXT>
+Update-Database -Context <NAME_OF_DBCONTEXT>

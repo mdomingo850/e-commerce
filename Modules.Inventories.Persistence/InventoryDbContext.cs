@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Modules.Inventories.Domain.Entities;
-using Persistence.Models;
+using SharedKernel.Persistence;
 
 namespace Modules.Inventories.Persistence;
 

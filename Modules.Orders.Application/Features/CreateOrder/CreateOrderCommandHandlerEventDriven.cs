@@ -1,5 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Modules.Customers.Api;
 using Modules.Inventories.Api;
 using Modules.Orders.Application.Contracts;
@@ -26,6 +27,7 @@ namespace Modules.Orders.Application.Features.CreateOrder;
 /// </summary>
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Result>
 {
+    private readonly ILogger<CreateOrderCommandHandler> _logger;
     private readonly ICustomersApi _customersApi;
     private readonly IOrderRepository _orderRepository;
     private readonly IPaymentsApi _paymentsApi;
@@ -35,18 +37,21 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         ICustomersApi customersApi,
         IOrderRepository orderRepository,
         IPaymentsApi paymentsApi,
-        IInventoriesApi inventoriesApi)
+        IInventoriesApi inventoriesApi,
+        ILogger<CreateOrderCommandHandler> logger)
     {
         _customersApi = customersApi;
         _orderRepository = orderRepository;
         _paymentsApi = paymentsApi;
         _inventoriesApi = inventoriesApi;
+        _logger = logger;
     }
 
     public async Task<Result> Handle(
         CreateOrderCommand request,
         CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Create order started");
         #region Validation
         //get customer by id
         var customerResponse = await _customersApi.GetByIdAsync(request.CustomerId);
@@ -89,6 +94,9 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
 
         //await _publisher.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
         //await _messageBus.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
+
+        _logger.LogInformation($"Create order completed for orderId {order.Id}");
+
         return Result.Success();
     }
 }

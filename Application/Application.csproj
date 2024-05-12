@@ -15,8 +15,8 @@
     <PackageReference Include="Ardalis.Result" Version="8.0.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
-    <PackageReference Include="MediatR" Version="12.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Quartz" Version="3.9.0" />
   </ItemGroup>
 
   <ItemGroup>
