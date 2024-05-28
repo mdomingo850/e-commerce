@@ -1,16 +1,32 @@
-﻿using Application.Contracts;
-using Infrastructure.Services;
+﻿using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.Models;
 
 namespace Infrastructure;
 
-public static class InfrastructureRegistrationService
+public static class InfrastructureRegistrationServices
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IPaymentService, BlankPaymentService>();
-        services.AddScoped<INotificationService, BlankNotificationService>();
+        
+        //services.AddMassTransit((busConfigurator) =>
+        //{
+        //    busConfigurator.SetKebabCaseEndpointNameFormatter();
+            
+        //    busConfigurator.AddConsumer()
 
-        return services;
+        //    busConfigurator.UsingRabbitMq((context, configurator) =>
+        //    {
+        //        configurator.Host(configuration["MessageBroker:Host"], h =>
+        //        {
+        //            h.Username(configuration["MessageBroker:Username"]!);
+        //            h.Password(configuration["MessageBroker:Password"]!);
+        //        });
+
+        //        configurator.ConfigureEndpoints(context);
+        //    });
+        //});
+        //return services;
     }
 }

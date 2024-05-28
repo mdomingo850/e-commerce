@@ -1,8 +1,8 @@
-﻿using Domain.Entities.Orders;
-using MediatR;
+﻿//using Domain.Entities.Orders;
+//using MediatR;
 
-namespace Application.Events;
+//namespace Application.Events;
 
-internal record OrderPaidEvent(int OrderId, OrderItem OrderItem) : INotification
-{
-}
+//internal record OrderPaidEvent(Guid OrderId, OrderItem OrderItem) : INotification
+//{
+//}

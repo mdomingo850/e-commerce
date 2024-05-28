@@ -12,10 +12,18 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interceptors\" />
+    <Folder Include="MappingProfiles\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

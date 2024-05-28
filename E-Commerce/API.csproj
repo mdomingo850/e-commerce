@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,22 +6,34 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>false</InvariantGlobalization>
     <RootNamespace>E_Commerce</RootNamespace>
+    <UserSecretsId>f6f6580a-5007-4dd4-b154-508f9ffd0c6d</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.2.2" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Modules.Customers.Api\Modules.Customers.Api.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.Api\Modules.Inventories.Api.csproj" />
+    <ProjectReference Include="..\Modules.Notification.Api\Modules.Notifications.Api.csproj" />
+    <ProjectReference Include="..\Modules.Orders.Api\Modules.Orders.Api.csproj" />
+    <ProjectReference Include="..\Modules.Payments.Api\Modules.Payments.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

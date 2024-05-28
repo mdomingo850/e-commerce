@@ -1,5 +1,5 @@
-﻿namespace Application.Events;
+﻿//namespace Application.Events;
 
-public record OrderPaymentFailedEvent(int OrderId)
-{
-}
+//public record OrderPaymentFailedEvent(Guid OrderId)
+//{
+//}

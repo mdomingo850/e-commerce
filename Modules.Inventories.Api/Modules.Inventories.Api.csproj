@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules.Orders.Test\Modules.Orders.IntegrationEvents.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.Application\Modules.Inventories.Application.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.IntegrationEvents\Modules.Inventories.IntegrationEvents.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.Persistence\Modules.Inventories.Persistence.csproj" />
+    <ProjectReference Include="..\Modules.Payments.IntegrationEvents\Modules.Payments.IntegrationEvents.csproj" />
+  </ItemGroup>
+
+</Project>

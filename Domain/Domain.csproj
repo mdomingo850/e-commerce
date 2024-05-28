@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.Result" Version="8.0.0" />
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Entities\" />
   </ItemGroup>
 
 </Project>

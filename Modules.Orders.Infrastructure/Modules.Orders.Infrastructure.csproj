@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
+    <PackageReference Include="Quartz" Version="3.9.0" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Modules.Orders.Application\Modules.Orders.Application.csproj" />
+    <ProjectReference Include="..\Modules.Orders.Persistence\Modules.Orders.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
