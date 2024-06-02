@@ -13,7 +13,7 @@ public static class InventoryPersistenceRegistrationServices
             (sp, optionsBuilder) =>
             {
 
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Inventory;Integrated Security=true;");
+                optionsBuilder.UseSqlServer(@"Data Source=inventoriesdb;Initial Catalog=Inventory;User ID =SA;Password=Password123;TrustServerCertificate=true");
             });
         services.AddScoped<IInventoryRepository, SqlInventoryRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

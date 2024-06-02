@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Modules.Inventories.Persistence;
+using Modules.Customers.Persistence;
 
 #nullable disable
 
-namespace Modules.Inventories.Persistence.Migrations
+namespace Modules.Customers.Persistence.Migrations
 {
-    [DbContext(typeof(InventoryDbContext))]
-    [Migration("20240506003536_Initial_Inventory")]
-    partial class Initial_Inventory
+    [DbContext(typeof(CustomerDbContext))]
+    [Migration("20240529073925_InitialSeet")]
+    partial class InitialSeet
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,25 +25,34 @@ namespace Modules.Inventories.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Modules.Inventories.Domain.Entities.Product", b =>
+            modelBuilder.Entity("Modules.Customers.Domain.Entities.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Customer", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ac8572ba-8742-43be-ac63-fd69654a7188"),
+                            FirstName = "Clark",
+                            LastName = "Kent"
+                        });
                 });
 
-            modelBuilder.Entity("Persistence.Models.OutboxMessage", b =>
+            modelBuilder.Entity("SharedKernel.Persistence.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,33 +78,6 @@ namespace Modules.Inventories.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OutboxMessages", (string)null);
-                });
-
-            modelBuilder.Entity("Modules.Inventories.Domain.Entities.Product", b =>
-                {
-                    b.OwnsOne("SharedKernel.Domain.Entities.ValueObjects.Money", "Price", b1 =>
-                        {
-                            b1.Property<Guid>("ProductId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<decimal>("Cost")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)");
-
-                            b1.HasKey("ProductId");
-
-                            b1.ToTable("Product");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductId");
-                        });
-
-                    b.Navigation("Price")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

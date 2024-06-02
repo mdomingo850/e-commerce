@@ -12,7 +12,7 @@ public static class PersistenceRegistrationServices
         services.AddDbContext<CustomerDbContext>(
             (sp, optionsBuilder) =>
             {
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Customer;Integrated Security=true;");
+                optionsBuilder.UseSqlServer(@"Data Source=customersdb;Initial Catalog=Customer;User ID =SA;Password=Password123;TrustServerCertificate=true");
             });
         services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
         return services;

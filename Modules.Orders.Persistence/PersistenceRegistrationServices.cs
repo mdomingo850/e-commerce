@@ -16,7 +16,7 @@ public static class PersistenceRegistrationServices
             {
                 var interceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
 
-                optionsBuilder.UseSqlServer(@"Server=(localdb)\ECommerce;Database=Order;Integrated Security=true;")
+                optionsBuilder.UseSqlServer(@"Data Source=ordersdb;Initial Catalog=Order;User ID =SA;Password=Password123;TrustServerCertificate=true")
                     .AddInterceptors(interceptor);
             });
         services.AddScoped<IOrderRepository, SqlOrderRespository>();

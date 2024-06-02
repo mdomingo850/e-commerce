@@ -1,0 +1,60 @@
+version: '3.4'
+
+networks:
+  backend:
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: E-Commerce/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+      - backend
+  customersdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123"
+    ports:
+      - "49154:1433"
+    networks:
+      - backend
+  inventoriesdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123"
+      MSSQL_PID: "Express"
+    ports:
+      - "49152:1433"
+    networks:
+      - backend
+  ordersdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123"
+      MSSQL_PID: "Express"
+    ports:
+      - "49153:1433"
+    networks:
+      - backend
+  ecommerce-mq:
+    image: rabbitmq:management
+    container_name: ECommerce.RabbitMQ
+    hostname: ecommerce-mq
+    volumes:
+        - ./.containers/queue/data/:/var/lib/rabbitmq
+        - ./.containers/queue/log/:/var/log/rabbitmq
+    environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+    ports: 
+        - "8080:5672"
+        - "8081:15672" 
+    networks:
+      - backend

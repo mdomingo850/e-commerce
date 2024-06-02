@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Modules.Inventories.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial_Inventory : Migration
+    public partial class IntialProductWithSeed : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,6 +41,11 @@ namespace Modules.Inventories.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Product",
+                columns: new[] { "Id", "Name", "Quantity", "Price_Cost", "Price_Currency" },
+                values: new object[] { new Guid("5f341ec0-38f2-4a3e-84d7-1eb51885a95d"), "Google Nest", 100, 39.99m, "$" });
         }
 
         /// <inheritdoc />

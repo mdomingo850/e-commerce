@@ -13,6 +13,7 @@ using Modules.Orders.Api.MessageConsumers;
 using Modules.Orders.Api.Sagas;
 using Modules.Orders.Persistence;
 using Modules.Orders.Domain.Entities;
+using E_Commerce;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -63,6 +64,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();

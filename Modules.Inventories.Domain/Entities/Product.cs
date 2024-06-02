@@ -16,6 +16,8 @@ public sealed class Product : AggregateRoot
 
     }
 
+
+
     private Product(Guid id, string name, string currency, decimal cost, int quantity) : base(id)
     {
         Id = id;
@@ -33,9 +35,21 @@ public sealed class Product : AggregateRoot
         Quantity = quantity;
     }
 
+    private Product(Guid id, string name, int quantity) : base(id)
+    {
+        Id = id;
+        Name = name;
+        Quantity = quantity;
+    }
+
     public static Product Create(Guid id, string name, Money price, int quantity)
     {
         return new Product(id, name, price, quantity);
+    }
+
+    public static Product Create(Guid id, string name, int quantity)
+    {
+        return new Product(id, name, quantity);
     }
 
     public static Product Create(Guid id, string name, string currency, decimal cost, int quantity)
