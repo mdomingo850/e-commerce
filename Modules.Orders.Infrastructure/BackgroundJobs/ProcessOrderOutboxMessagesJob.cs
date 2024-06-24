@@ -56,7 +56,7 @@ public class ProcessOutboxMessagesJob : IJob
     public async Task Execute(IJobExecutionContext context)
     {
         var messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null)
-            .Take(20).ToListAsync(context.CancellationToken);
+            .Take(100).ToListAsync(context.CancellationToken);
 
         foreach (var message in messages)
         {
