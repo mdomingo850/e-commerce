@@ -16,7 +16,7 @@ public static class InventoryPersistenceRegistrationServices
                 optionsBuilder.UseSqlServer(@"Data Source=inventoriesdb;Initial Catalog=Inventory;User ID =SA;Password=Password123;TrustServerCertificate=true");
             });
         services.AddScoped<IInventoryRepository, SqlInventoryRepository>();
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         return services;
     }
 }

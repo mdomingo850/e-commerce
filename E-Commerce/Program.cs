@@ -1,4 +1,3 @@
-
 using Serilog;
 using Modules.Customers.Api;
 using Modules.Inventories.Api;
@@ -75,3 +74,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
