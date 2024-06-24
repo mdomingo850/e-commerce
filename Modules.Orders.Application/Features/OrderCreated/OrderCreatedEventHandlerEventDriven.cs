@@ -16,6 +16,9 @@ internal class OrderCreatedEventHandlerEventDriven : INotificationHandler<OrderC
 
     public async Task Handle(OrderCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        await _publishEndpoint.Publish(new OrderCreatedIntegrationEvent(notification.OrderId));
+        await _publishEndpoint.Publish(new OrderCreatedIntegrationEvent(
+            notification.OrderId, 
+            notification.ProductId, 
+            notification.QuantityBought));
     }
 }

@@ -20,7 +20,16 @@ internal class ReserveProductCommandHandler : IRequestHandler<ReserveProductComm
     public async Task Handle(ReserveProductCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Reserve product started");
-        await Task.Delay(1000);
+        var product = await _inventoryRepository.GetProductByIdAsync(request.ProductId);
+
+        if (product is null)
+        {
+            _logger.LogError("Product not found");
+            return;
+        }
+
+        await _inventoryRepository.ReduceStockAmount(product.Id, request.QuantityBought, request.OrderId);
+
         _logger.LogInformation("Reserve product completed");
     }
 }

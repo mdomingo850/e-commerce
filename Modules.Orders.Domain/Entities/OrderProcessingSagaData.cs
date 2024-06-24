@@ -11,4 +11,8 @@ public class OrderProcessingSagaData : SagaStateMachineInstance
     public bool OrderPaid { get; set; }
     public bool ProductReserved { get; set; }
     public bool OrderProcessingCompleted { get; set; }
+    public Guid ProductId { get; set; }
+    public int QuantityBought { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
 }

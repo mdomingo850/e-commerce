@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using SharedKernel.Domain.Entities.Primitives;
 using SharedKernel.Domain.Entities.ValueObjects;
+using System.ComponentModel.DataAnnotations;
 
 namespace Modules.Inventories.Domain.Entities;
 
@@ -11,11 +12,13 @@ public sealed class Product : AggregateRoot
     public Money Price { get; private set; }
     public int Quantity { get; private set; }
 
+    [Timestamp]
+    public byte[] Version { get; private set; }
+
     private Product(Guid id) : base(id)
     {
 
     }
-
 
 
     private Product(Guid id, string name, string currency, decimal cost, int quantity) : base(id)

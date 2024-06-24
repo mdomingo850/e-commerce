@@ -33,6 +33,9 @@ public class OrderProcessingSaga : MassTransitStateMachine<OrderProcessingSagaDa
                 .Then(context =>
                 {
                     context.Saga.OrderId = context.Message.OrderId;
+                    context.Saga.ProductId = context.Message.ProductId;
+                    context.Saga.QuantityBought = context.Message.QuantityBought;
+                    context.Saga.StartDate = DateTime.UtcNow;
                 })
                 .TransitionTo(OrderConfirmationEmailSending)
                 .Publish(context => new SendOrderConfirmationEmail(context.Message.OrderId)));
@@ -47,7 +50,10 @@ public class OrderProcessingSaga : MassTransitStateMachine<OrderProcessingSagaDa
             When(OrderPaid)
                 .Then(context => context.Saga.OrderPaid = true)
                 .TransitionTo(ProductReserving)
-                .Publish(context => new ReserveProduct(context.Message.OrderId)));
+                .Publish(context => new ReserveProduct(
+                    context.Message.OrderId,
+                    context.Saga.ProductId,
+                    context.Saga.QuantityBought)));
 
         During(ProductReserving,
             When(ProductReserved)
@@ -55,6 +61,7 @@ public class OrderProcessingSaga : MassTransitStateMachine<OrderProcessingSagaDa
                 {
                     context.Saga.ProductReserved = true;
                     context.Saga.OrderProcessingCompleted = true;
+                    context.Saga.EndDate = DateTime.UtcNow; 
                 })
                 .TransitionTo(OrderProcessing)
                 .Publish(context => new CompleteOrderProcessing(context.Message.OrderId))
