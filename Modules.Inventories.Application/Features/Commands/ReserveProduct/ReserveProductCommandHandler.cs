@@ -1,10 +1,11 @@
-﻿using MediatR;
+﻿using Ardalis.Result;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Modules.Inventories.Application.Contracts;
 
 namespace Modules.Inventories.Application.Features.Commands.ReserveProduct;
 
-internal class ReserveProductCommandHandler : IRequestHandler<ReserveProductCommand>
+internal class ReserveProductCommandHandler : IRequestHandler<ReserveProductCommand, Result>
 {
     private readonly ILogger<ReserveProductCommandHandler> _logger;
     private readonly IInventoryRepository _inventoryRepository;
@@ -17,19 +18,27 @@ internal class ReserveProductCommandHandler : IRequestHandler<ReserveProductComm
         _inventoryRepository = inventoryRepository;
     }
 
-    public async Task Handle(ReserveProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ReserveProductCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Reserve product started");
+
         var product = await _inventoryRepository.GetProductByIdAsync(request.ProductId);
 
         if (product is null)
         {
             _logger.LogError("Product not found");
-            return;
+            return Result.Error("Product not found");
         }
 
-        await _inventoryRepository.ReduceStockAmount(product.Id, request.QuantityBought, request.OrderId);
+        return Result.Error("Failed to reduce stock amount");
+
+        var reduceStockAmountResult = await _inventoryRepository.ReduceStockAmount(product.Id, request.QuantityBought, request.OrderId);
+
+        if (!reduceStockAmountResult)
+            return Result.Error("Failed to reduce stock amount");
 
         _logger.LogInformation("Reserve product completed");
+
+        return Result.Success();
     }
 }

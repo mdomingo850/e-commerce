@@ -31,6 +31,7 @@ builder.Services.AddMassTransit((busConfigurator) =>
     busConfigurator.AddConsumer<PayOrderConsumer>();
     busConfigurator.AddConsumer<ReserveProductConsumer>();
     busConfigurator.AddConsumer<OrderProcessingCompletedConsumer>();
+    busConfigurator.AddConsumer<ReverseOrderPaymentConsumer>();
 
     busConfigurator.AddSagaStateMachine<OrderProcessingSaga, OrderProcessingSagaData>()
         .EntityFrameworkRepository(r =>

@@ -4,12 +4,12 @@ using Modules.Payments.Application.Contracts;
 
 namespace Modules.Payments.Application.Features.Commands.PayOrder;
 
-internal class PayOrderCommandHandler : IRequestHandler<PayOrderCommand>
+internal class ReverseOrderPaymentCommandHandler : IRequestHandler<PayOrderCommand>
 {
-    private readonly ILogger<PayOrderCommandHandler> _logger;
+    private readonly ILogger<ReverseOrderPaymentCommandHandler> _logger;
     private readonly IPaymentService _paymentService;
 
-    public PayOrderCommandHandler(ILogger<PayOrderCommandHandler> logger, IPaymentService paymentService)
+    public ReverseOrderPaymentCommandHandler(ILogger<ReverseOrderPaymentCommandHandler> logger, IPaymentService paymentService)
     {
         _logger = logger;
         _paymentService = paymentService;

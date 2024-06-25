@@ -17,10 +17,16 @@ public sealed class ReserveProductConsumer : IConsumer<ReserveProduct>
 
     public async Task Consume(ConsumeContext<ReserveProduct> context)
     {
-        await _mediator.Send(new ReserveProductCommand(
+        var reserveProductResult = await _mediator.Send(new ReserveProductCommand(
             context.Message.OrderId, 
             context.Message.ProductId, 
             context.Message.QuantityBought));
+
+        if (!reserveProductResult.IsSuccess)
+        {
+            await context.Publish(new ProductReservedFailedIntegrationEvent(context.Message.OrderId));
+            return;
+        }
 
         await context.Publish(new ProductReservedIntegrationEvent(context.Message.OrderId));
     }

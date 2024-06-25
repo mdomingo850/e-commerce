@@ -28,6 +28,6 @@ public class OrderDbContext : DbContext
         modelBuilder.Entity<Order>().ToTable(nameof(Order)).Ignore(o => o.Customer);
         modelBuilder.Entity<OrderItem>().ToTable(nameof(OrderItem)).Ignore(oi => oi.Product);
         modelBuilder.Entity<OutboxMessage>().ToTable(nameof(OutboxMessages));
-        modelBuilder.Entity<OrderProcessingSagaData>().ToTable(nameof(SagaData)).HasKey(x => x.CorrelationId);
+        modelBuilder.Entity<OrderProcessingSagaData>().ToTable(nameof(OrderProcessingSagaData)).HasKey(x => x.CorrelationId);
     }
 }

@@ -49,7 +49,7 @@ internal class SqlInventoryRepository : IInventoryRepository
         throw new NotImplementedException();
     }
 
-    public async Task ReduceStockAmount(Guid productId, int quantityToReduce, Guid orderId)
+    public async Task<bool> ReduceStockAmount(Guid productId, int quantityToReduce, Guid orderId)
     {
         for (int retryCount = 0; retryCount < 3; retryCount++) // Adjust retry count as needed
         {
@@ -63,7 +63,7 @@ internal class SqlInventoryRepository : IInventoryRepository
                 _dbContext.Update(productModel);
                 await _dbContext.SaveChangesAsync();
                 //_logger.LogInformation("Stock updated for product for order {orderId}, current stock {stock}", orderId, productModel.Quantity);
-                return; // Stock update successful
+                return true; // Stock update successful
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -74,6 +74,7 @@ internal class SqlInventoryRepository : IInventoryRepository
         }
 
         _logger.LogError("Failed to update stock for product for order {orderId} after retries", orderId);
-        throw new Exception(); // Stock update failed after retries
+        
+        return false; // Stock update failed after retries
     }
 }

@@ -37,7 +37,7 @@ public class InventoryDbContext : DbContext
         modelBuilder.Entity<Product>(p =>
         {
             p.ToTable(nameof(Product));
-            p.HasData(Product.Create(Guid.Parse("5F341EC0-38F2-4A3E-84D7-1EB51885A95D"), "Google Nest", 100));
+            p.HasData(Product.Create(Guid.Parse("5F341EC0-38F2-4A3E-84D7-1EB51885A95D"), "Google Nest", 1000));
             p.OwnsOne(p => p.Price, priceBuilder =>
             {
                 priceBuilder.Property(m => m.Currency).HasMaxLength(3);
