@@ -72,7 +72,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
 
         //inventory in-stock validation
         var firstOrderItem = request.OrderItems.First();
-        var firstProductId = firstOrderItem.Item1;
+        var firstProductId = firstOrderItem.ProductId;
         var productResponse = await _inventoriesApi.GetProductByIdAsync(firstProductId);
 
         if (productResponse is null)
@@ -80,7 +80,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
 
         var product = Product.Create(productResponse.Id, productResponse.Name, productResponse.Price, productResponse.Quantity);
 
-        var firstProductQuanitity = firstOrderItem.Item2;
+        var firstProductQuanitity = firstOrderItem.Quantity;
         if (!product.IsInStock(firstProductQuanitity))
             return Result.Conflict();
         #endregion

@@ -13,6 +13,8 @@ using Modules.Orders.Api.Sagas;
 using Modules.Orders.Persistence;
 using Modules.Orders.Domain.Entities;
 using E_Commerce;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -57,6 +59,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var rabbitMQConnectionString = builder.Configuration["MessageBroker:Host"];
+
+builder.Services.AddHealthChecks()
+    .AddRabbitMQ(rabbitConnectionString: rabbitMQConnectionString);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -69,6 +76,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapHealthChecks("health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseAuthorization();
 
