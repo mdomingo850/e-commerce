@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules.Orders.Test\Modules.Orders.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\Modules.Payments.Application\Modules.Payments.Application.csproj" />
+	<ProjectReference Include="..\Modules.Orders.IntegrationEvents\Modules.Orders.IntegrationEvents.csproj" />
+	<ProjectReference Include="..\Modules.Payments.Application\Modules.Payments.Application.csproj" />
     <ProjectReference Include="..\Modules.Payments.Infrastructure\Modules.Payments.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules.Payments.IntegrationEvents\Modules.Payments.IntegrationEvents.csproj" />
   </ItemGroup>

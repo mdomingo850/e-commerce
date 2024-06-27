@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules.Orders.Test\Modules.Orders.IntegrationEvents.csproj" />
     <ProjectReference Include="..\Modules.Notifications.Application\Modules.Notifications.Application.csproj" />
     <ProjectReference Include="..\Modules.Notifications.Infrastructure\Modules.Notifications.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules.Notifications.IntegrationEvents\Modules.Notifications.IntegrationEvents.csproj" />
+    <ProjectReference Include="..\Modules.Orders.IntegrationEvents\Modules.Orders.IntegrationEvents.csproj" />
   </ItemGroup>
 
 </Project>
