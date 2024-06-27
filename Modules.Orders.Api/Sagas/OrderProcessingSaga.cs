@@ -85,6 +85,7 @@ public class OrderProcessingSaga : MassTransitStateMachine<OrderProcessingSagaDa
                     context.Saga.OrderPaymentReversed = true;
                     context.Saga.OrderProcessingCompleted = true;
                     context.Saga.EndDate = DateTime.UtcNow;
+                    context.Saga.OrderProcessingSucceeded = false;
                 })
                 .TransitionTo(OrderProcessFinalizing)
                 .Publish(context => new CompleteOrderProcessing(context.Message.OrderId))
