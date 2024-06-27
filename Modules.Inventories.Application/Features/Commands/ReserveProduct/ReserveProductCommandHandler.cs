@@ -30,8 +30,6 @@ internal class ReserveProductCommandHandler : IRequestHandler<ReserveProductComm
             return Result.Error("Product not found");
         }
 
-        return Result.Error("Failed to reduce stock amount");
-
         var reduceStockAmountResult = await _inventoryRepository.ReduceStockAmount(product.Id, request.QuantityBought, request.OrderId);
 
         if (!reduceStockAmountResult)
