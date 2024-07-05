@@ -85,6 +85,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orders.Application.Integrat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Modules.Orders.IntegrationEvents", "Modules.Orders.IntegrationEvents\Modules.Orders.IntegrationEvents.csproj", "{E5A055BF-30B7-4C34-8832-36F22665E4B0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{D22C678E-FDB5-49F4-9BE7-E06AD30DF7E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadBalancer", "..\LoadBalancer\LoadBalancer.csproj", "{EBA3F4C7-5E44-4E9C-B28A-52A23F3D1009}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -223,6 +227,10 @@ Global
 		{E5A055BF-30B7-4C34-8832-36F22665E4B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5A055BF-30B7-4C34-8832-36F22665E4B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5A055BF-30B7-4C34-8832-36F22665E4B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBA3F4C7-5E44-4E9C-B28A-52A23F3D1009}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBA3F4C7-5E44-4E9C-B28A-52A23F3D1009}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBA3F4C7-5E44-4E9C-B28A-52A23F3D1009}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBA3F4C7-5E44-4E9C-B28A-52A23F3D1009}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -264,6 +272,7 @@ Global
 		{E9F01E86-4C56-47A2-9E00-B58E90061283} = {7DFC3ECB-6536-4B86-963B-9224E87FDCB0}
 		{9A0544EF-DC35-48AA-A0E8-00A50D643005} = {7DFC3ECB-6536-4B86-963B-9224E87FDCB0}
 		{E5A055BF-30B7-4C34-8832-36F22665E4B0} = {7F8D99D0-1897-4E56-A22C-C12F7CC8D9E8}
+		{EBA3F4C7-5E44-4E9C-B28A-52A23F3D1009} = {D22C678E-FDB5-49F4-9BE7-E06AD30DF7E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FA62ADB-A778-484B-8BAB-C80C83CB4D5F}

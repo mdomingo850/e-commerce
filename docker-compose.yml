@@ -4,14 +4,26 @@ networks:
   backend:
 
 services:
-  api:
+  api1:
     image: ${DOCKER_REGISTRY-}api
+    container_name: ecommerce-api1
     build:
       context: .
       dockerfile: E-Commerce/Dockerfile
     ports:
       - "5000:5000"
       - "5001:5001"
+    networks:
+      - backend
+  api2:
+    image: ${DOCKER_REGISTRY-}api
+    container_name: ecommerce-api2
+    build:
+      context: .
+      dockerfile: E-Commerce/Dockerfile
+    ports:
+      - "6000:6000"
+      - "6001:6001"
     networks:
       - backend
   customersdb:
