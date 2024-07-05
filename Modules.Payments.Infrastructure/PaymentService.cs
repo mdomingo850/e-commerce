@@ -21,7 +21,7 @@ public class PaymentService : IPaymentService
 
     public async Task<Result<bool>> ValidatePaymentOptionAsync()
     {
-        await Task.Delay(3000);
+        await Task.Delay(500);
 
         return Result.Success(true);
     }

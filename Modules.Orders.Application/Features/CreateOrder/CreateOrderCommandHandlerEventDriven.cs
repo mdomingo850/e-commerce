@@ -53,14 +53,33 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
     {
         _logger.LogInformation("Create order started");
         #region Validation
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _logger.LogError("Request timed out initial");
+            return Result.CriticalError("Request timed out initial"); // Indicate cancellation
+        }
+
         //get customer by id
         var customerResponse = await _customersApi.GetByIdAsync(request.CustomerId);
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _logger.LogError("Request timed out get customer");
+            return Result.CriticalError("Request timed out get customer"); // Indicate cancellation
+        }
 
         if (customerResponse is null)
             return Result.NotFound();
 
         //payment validation
         var validatePaymentOptionResult = await _paymentsApi.ValidatePaymentOptionAsync();
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _logger.LogError("Request timed out validate payment");
+            return Result.CriticalError("Request timed out validate payment"); // Indicate cancellation
+        }
 
         if (!validatePaymentOptionResult.IsSuccess)
             return Result.Error([.. validatePaymentOptionResult.Errors]);
@@ -74,6 +93,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         var firstOrderItem = request.OrderItems.First();
         var firstProductId = firstOrderItem.ProductId;
         var productResponse = await _inventoriesApi.GetProductByIdAsync(firstProductId);
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _logger.LogError("Request timed out get product");
+            return Result.CriticalError("Request timed out get product"); // Indicate cancellation
+        }
 
         if (productResponse is null)
             return Result.NotFound();
@@ -91,6 +116,12 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Res
         var order = Order.Create(Guid.NewGuid(), customer, new HashSet<OrderItem>() { orderItem }, DateTime.UtcNow);
 
         await _orderRepository.AddAsync(order);
+
+        if (cancellationToken.IsCancellationRequested)
+        {
+            _logger.LogError("Request timed out add order");
+            return Result.CriticalError("Request timed out add order"); // Indicate cancellation
+        }
 
         //await _publisher.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));
         //await _messageBus.Publish(new OrderCreatedDomainEvent(Guid.NewGuid(), order.Id, orderItem));

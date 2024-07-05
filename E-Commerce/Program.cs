@@ -15,6 +15,8 @@ using Modules.Orders.Domain.Entities;
 using E_Commerce;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Http.Timeouts;
+using E_Commerce.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -57,6 +59,10 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddRequestTimeouts(options => {
+    options.DefaultPolicy =
+        new RequestTimeoutPolicy { Timeout = TimeSpan.FromMilliseconds(600) };
+});
 builder.Services.AddSwaggerGen();
 
 var rabbitMQConnectionString = builder.Configuration["MessageBroker:Host"];
@@ -83,7 +89,8 @@ app.MapHealthChecks("health", new HealthCheckOptions
 });
 
 app.UseAuthorization();
-
+app.UseRequestTimeouts();
+app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 
 app.Run();
