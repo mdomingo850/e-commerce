@@ -67,7 +67,7 @@ internal class SqlInventoryRepository : IInventoryRepository
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                //_logger.LogWarning("Concurrency Exception on attempt {retryCount}, retrying for {orderId}, new stock {stock}...", retryCount + 1, orderId, productModel.Quantity);
+                _logger.LogWarning("Concurrency Exception on attempt {retryCount}, retrying for {orderId}, new stock {stock}...", retryCount + 1, orderId, productModel.Quantity);
                 // Implement a wait strategy between retries (optional)
                 await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, retryCount))); // Exponential backoff
             }

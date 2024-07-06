@@ -1,10 +1,13 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Modules.Orders.Persistence;
 using Modules.Orders.Persistence.Models;
 using Newtonsoft.Json;
 using Quartz;
 using SharedKernel.Domain.Entities.Primitives;
+using System;
+using static MassTransit.Monitoring.Performance.BuiltInCounters;
 
 namespace Modules.Orders.Infrastructure.BackgroundJobs;
 
@@ -13,56 +16,32 @@ public class ProcessOutboxMessagesJob : IJob
 {
     private readonly OrderDbContext _dbContext;
     private readonly IPublisher _publisher;
+    private readonly ILogger<ProcessOutboxMessagesJob> _logger;
 
     public ProcessOutboxMessagesJob(
         OrderDbContext dbContext,
-        IPublisher publisher)
+        IPublisher publisher,
+        ILogger<ProcessOutboxMessagesJob> logger)
     {
         _dbContext = dbContext;
         _publisher = publisher;
+        _logger = logger;
     }
-
-    //public async Task Execute(IJobExecutionContext context)
-    //{
-    //    var messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null)
-    //        .Take(20).ToListAsync(context.CancellationToken);
-
-    //    var publishers = new Task[20];
-
-    //    for (int i = 0; i < messages.Count; i++)
-    //    {
-    //        var message = messages[i];
-
-    //        var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
-    //            new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
-
-    //        if (domainEvent is null)
-    //        {
-    //            //Add logging
-    //            continue;
-    //        }
-
-    //        publishers[i] =  _publisher.Publish(domainEvent, context.CancellationToken);
-
-    //    }
-
-    //    foreach (var message in messages) {
-    //        message.ProcessedOn = DateTime.UtcNow;
-    //    }
-    //    await _dbContext.SaveChangesAsync();
-    //}
 
     public async Task Execute(IJobExecutionContext context)
     {
-        var messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null)
-            .Take(100).ToListAsync(context.CancellationToken);
+        var messages = await GetAndLockRecords(context);
+
+        if (!messages.Any())
+        {
+            //_logger.LogInformation("No messages to process");
+            return;
+        }
 
         foreach (var message in messages)
         {
             var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
                 new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-
 
             if (domainEvent is null)
             {
@@ -73,8 +52,54 @@ public class ProcessOutboxMessagesJob : IJob
             await _publisher.Publish(domainEvent, context.CancellationToken);
 
             message.ProcessedOn = DateTime.UtcNow;
+            await _dbContext.SaveChangesAsync();
+
+            //_logger.LogInformation($"Message {message.Id} is processed");
+        }
+    }
+
+    private async Task<IEnumerable<OutboxMessage>> GetAndLockRecords(IJobExecutionContext context)
+    {
+        IEnumerable<OutboxMessage> messages = null;
+        for (int retryCount = 0; retryCount < 3; retryCount++) // Adjust retry count as needed
+        {
+            messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null && !m.IsLocked)
+            .Take(100).ToListAsync(context.CancellationToken);
+
+            _logger.LogInformation("Messages fetched for retry {retry}", retryCount + 1);
+
+            if (!messages.Any())
+            {
+                _logger.LogInformation("No messages to process for retry {retry}", retryCount + 1);
+                return messages;
+            }
+
+            try
+            {
+                foreach (var message in messages)
+                {
+                    message.IsLocked = true;
+                    _logger.LogInformation("Locking message {messageId} for retry {retry}", message.Id, retryCount + 1);
+                }
+                
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation("Messages are locked for retry {retryCount}", retryCount + 1);
+
+                return messages;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogWarning("Concurrency Exception on attempt {retryCount}", retryCount + 1);
+                // Implement a wait strategy between retries (optional)
+                foreach(var message in messages)
+                {
+                    _dbContext.Entry(message).Reload();
+                }
+                
+                await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, retryCount))); // Exponential backoff
+            }
         }
 
-        await _dbContext.SaveChangesAsync();
+        return new List<OutboxMessage>();
     }
 }
