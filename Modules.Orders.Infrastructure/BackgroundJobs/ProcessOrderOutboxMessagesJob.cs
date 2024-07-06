@@ -6,6 +6,7 @@ using Modules.Orders.Persistence.Models;
 using Newtonsoft.Json;
 using Quartz;
 using SharedKernel.Domain.Entities.Primitives;
+using SharedKernel.Models;
 using System;
 using static MassTransit.Monitoring.Performance.BuiltInCounters;
 
@@ -17,15 +18,18 @@ public class ProcessOutboxMessagesJob : IJob
     private readonly OrderDbContext _dbContext;
     private readonly IPublisher _publisher;
     private readonly ILogger<ProcessOutboxMessagesJob> _logger;
+    private readonly IEnvironmentVariables _environmentVariables;
 
     public ProcessOutboxMessagesJob(
         OrderDbContext dbContext,
         IPublisher publisher,
-        ILogger<ProcessOutboxMessagesJob> logger)
+        ILogger<ProcessOutboxMessagesJob> logger,
+        IEnvironmentVariables environmentVariables)
     {
         _dbContext = dbContext;
         _publisher = publisher;
         _logger = logger;
+        _environmentVariables = environmentVariables;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -64,13 +68,13 @@ public class ProcessOutboxMessagesJob : IJob
         for (int retryCount = 0; retryCount < 3; retryCount++) // Adjust retry count as needed
         {
             messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null && !m.IsLocked)
-            .Take(100).ToListAsync(context.CancellationToken);
+            .Take(10).ToListAsync(context.CancellationToken);
 
-            _logger.LogInformation("Messages fetched for retry {retry}", retryCount + 1);
+            _logger.LogInformation("{apiName} - Messages fetched for retry {retry}", _environmentVariables.ApiName, retryCount + 1);
 
             if (!messages.Any())
             {
-                _logger.LogInformation("No messages to process for retry {retry}", retryCount + 1);
+                //_logger.LogInformation("No messages to process for retry {retry}", retryCount + 1);
                 return messages;
             }
 
@@ -79,19 +83,19 @@ public class ProcessOutboxMessagesJob : IJob
                 foreach (var message in messages)
                 {
                     message.IsLocked = true;
-                    _logger.LogInformation("Locking message {messageId} for retry {retry}", message.Id, retryCount + 1);
+                    //_logger.LogInformation("Locking message {messageId} for retry {retry}", message.Id, retryCount + 1);
                 }
-                
+
                 await _dbContext.SaveChangesAsync();
-                _logger.LogInformation("Messages are locked for retry {retryCount}", retryCount + 1);
+                _logger.LogInformation("{apiName} - Messages are locked for retry {retryCount}", _environmentVariables.ApiName, retryCount + 1);
 
                 return messages;
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogWarning("Concurrency Exception on attempt {retryCount}", retryCount + 1);
+                _logger.LogWarning("{apiName} - Concurrency Exception on attempt {retryCount}", _environmentVariables.ApiName, retryCount + 1);
                 // Implement a wait strategy between retries (optional)
-                foreach(var message in messages)
+                foreach (var message in messages)
                 {
                     _dbContext.Entry(message).Reload();
                 }

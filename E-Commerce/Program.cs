@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Http.Timeouts;
 using E_Commerce.Middlewares;
+using SharedKernel.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -69,6 +70,10 @@ var rabbitMQConnectionString = builder.Configuration["MessageBroker:Host"];
 
 builder.Services.AddHealthChecks()
     .AddRabbitMQ(rabbitConnectionString: rabbitMQConnectionString);
+
+var apiName = Environment.GetEnvironmentVariable("API_NAME");
+
+builder.Services.AddScoped<IEnvironmentVariables>(x => new EnvironmentVariables(apiName));
 
 var app = builder.Build();
 
