@@ -23,5 +23,8 @@ public sealed class SendOrderConfirmationConsumer
     {
         await _mediator.Send(new SendOrderConfirmationCommand(context.Message.OrderId));
         await context.Publish(new OrderConfirmationEmailSentIntegrationEvent(context.Message.OrderId));
+
+        // save the message to the database
+
     }
 }

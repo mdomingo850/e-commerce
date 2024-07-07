@@ -7,7 +7,7 @@ public class PaymentService : IPaymentService
 {
     public async Task<Result> PayAsync()
     {
-        await Task.Delay(3000);
+        await Task.Delay(10000);
 
         return Result.Success();
     }

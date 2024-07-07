@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Modules.Inventories.Application.Contracts;
 using Modules.Inventories.Domain.Entities;
+using SharedKernel.Persistence;
 
 namespace Modules.Inventories.Persistence.Reposiories;
 
@@ -76,5 +77,17 @@ internal class SqlInventoryRepository : IInventoryRepository
         _logger.LogError("Failed to update stock for product for order {orderId} after retries", orderId);
         
         return false; // Stock update failed after retries
+    }
+
+    public async Task AddInboxMessage(InboxMessage message)
+    {
+        _dbContext.Add(message);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> HasInboxMessage(Guid inboxId)
+    {
+        return await _dbContext.InboxMessages.AnyAsync(x => x.Id == inboxId);
     }
 }

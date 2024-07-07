@@ -1,27 +1,28 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Modules.Orders.Persistence;
-using Modules.Orders.Persistence.Models;
+using Modules.Inventories.Domain.Entities;
+using Modules.Inventories.Persistence;
 using Newtonsoft.Json;
 using Quartz;
 using SharedKernel.Domain.Entities.Primitives;
 using SharedKernel.Models;
+using SharedKernel.Persistence;
 
 namespace Modules.Orders.Infrastructure.BackgroundJobs;
 
 [DisallowConcurrentExecution]
-public class ProcessOutboxMessagesJob : IJob
+public class ProcessInventoryInboxMessagesJob : IJob
 {
-    private readonly OrderDbContext _dbContext;
+    private readonly InventoryDbContext _dbContext;
     private readonly IPublisher _publisher;
-    private readonly ILogger<ProcessOutboxMessagesJob> _logger;
+    private readonly ILogger<ProcessInventoryInboxMessagesJob> _logger;
     private readonly IEnvironmentVariables _environmentVariables;
 
-    public ProcessOutboxMessagesJob(
-        OrderDbContext dbContext,
+    public ProcessInventoryInboxMessagesJob(
+        InventoryDbContext dbContext,
         IPublisher publisher,
-        ILogger<ProcessOutboxMessagesJob> logger,
+        ILogger<ProcessInventoryInboxMessagesJob> logger,
         IEnvironmentVariables environmentVariables)
     {
         _dbContext = dbContext;
@@ -42,16 +43,16 @@ public class ProcessOutboxMessagesJob : IJob
 
         foreach (var message in messages)
         {
-            var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
+            var integrationEvent = JsonConvert.DeserializeObject<IDomainEvent>(message.Content,
                 new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
-            if (domainEvent is null)
+            if (integrationEvent is null)
             {
                 //Add logging
                 continue;
             }
 
-            await _publisher.Publish(domainEvent, context.CancellationToken);
+            await _publisher.Publish(integrationEvent, context.CancellationToken);
 
             message.ProcessedOn = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync();
@@ -60,15 +61,16 @@ public class ProcessOutboxMessagesJob : IJob
         }
     }
 
-    private async Task<IEnumerable<OutboxMessage>> GetAndLockRecords(IJobExecutionContext context)
+    private async Task<IEnumerable<InboxMessage>> GetAndLockRecords(IJobExecutionContext context)
     {
-        IEnumerable<OutboxMessage> messages = null;
+        IEnumerable<InboxMessage> messages = null;
         for (int retryCount = 0; retryCount < 3; retryCount++) // Adjust retry count as needed
         {
-            messages = await _dbContext.Set<OutboxMessage>().Where(m => m.ProcessedOn == null && !m.IsLocked)
+            messages = await _dbContext.Set<InboxMessage>().Where(m => m.ProcessedOn == null && !m.IsLocked)
             .Take(10).ToListAsync(context.CancellationToken);
 
-            _logger.LogInformation("{apiName} - Messages fetched for retry {retry}", _environmentVariables.ApiName, retryCount + 1);
+            _logger.LogInformation("{apiName} - Inventory Inbox Messages fetched for retry {retry}", 
+                _environmentVariables.ApiName, retryCount + 1);
 
             if (!messages.Any())
             {
@@ -85,13 +87,16 @@ public class ProcessOutboxMessagesJob : IJob
                 }
 
                 await _dbContext.SaveChangesAsync();
-                _logger.LogInformation("{apiName} - Messages are locked for retry {retryCount}", _environmentVariables.ApiName, retryCount + 1);
+                _logger.LogInformation("{apiName} - Messages are locked for retry {retryCount}", 
+                    _environmentVariables.ApiName, retryCount + 1);
 
                 return messages;
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogWarning("{apiName} - Concurrency Exception on attempt {retryCount}", _environmentVariables.ApiName, retryCount + 1);
+                _logger.LogWarning("{apiName} - Concurrency Exception on attempt {retryCount}", 
+                    _environmentVariables.ApiName, retryCount + 1);
+
                 // Implement a wait strategy between retries (optional)
                 foreach (var message in messages)
                 {
@@ -102,6 +107,6 @@ public class ProcessOutboxMessagesJob : IJob
             }
         }
 
-        return new List<OutboxMessage>();
+        return new List<InboxMessage>();
     }
 }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Inventories.Application\Modules.Inventories.Application.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.Infrastructure\Modules.Inventories.Infrastructure.csproj" />
     <ProjectReference Include="..\Modules.Inventories.IntegrationEvents\Modules.Inventories.IntegrationEvents.csproj" />
     <ProjectReference Include="..\Modules.Inventories.Persistence\Modules.Inventories.Persistence.csproj" />
     <ProjectReference Include="..\Modules.Orders.IntegrationEvents\Modules.Orders.IntegrationEvents.csproj" />
