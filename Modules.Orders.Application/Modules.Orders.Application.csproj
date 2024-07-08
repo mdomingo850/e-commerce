@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules.Orders.Test\Modules.Orders.IntegrationEvents.csproj" />
-    <ProjectReference Include="..\Modules.Customers.Api\Modules.Customers.Api.csproj" />
+	<ProjectReference Include="..\Modules.Orders.IntegrationEvents\Modules.Orders.IntegrationEvents.csproj" />
+	<ProjectReference Include="..\Modules.Customers.Api\Modules.Customers.Api.csproj" />
     <ProjectReference Include="..\Modules.Inventories.Api\Modules.Inventories.Api.csproj" />
     <ProjectReference Include="..\Modules.Orders.Domain\Modules.Orders.Domain.csproj" />
     <ProjectReference Include="..\Modules.Payments.Api\Modules.Payments.Api.csproj" />

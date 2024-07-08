@@ -35,12 +35,26 @@ namespace Modules.Inventories.Persistence.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.HasKey("Id");
 
                     b.ToTable("Product", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5f341ec0-38f2-4a3e-84d7-1eb51885a95d"),
+                            Name = "Google Nest",
+                            Quantity = 1000
+                        });
                 });
 
-            modelBuilder.Entity("Persistence.Models.OutboxMessage", b =>
+            modelBuilder.Entity("SharedKernel.Persistence.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,6 +103,14 @@ namespace Modules.Inventories.Persistence.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    ProductId = new Guid("5f341ec0-38f2-4a3e-84d7-1eb51885a95d"),
+                                    Cost = 39.99m,
+                                    Currency = "$"
+                                });
                         });
 
                     b.Navigation("Price")

@@ -39,9 +39,17 @@ namespace Modules.Customers.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customer", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ac8572ba-8742-43be-ac63-fd69654a7188"),
+                            FirstName = "Clark",
+                            LastName = "Kent"
+                        });
                 });
 
-            modelBuilder.Entity("Persistence.Models.OutboxMessage", b =>
+            modelBuilder.Entity("SharedKernel.Persistence.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

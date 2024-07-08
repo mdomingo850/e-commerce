@@ -7,7 +7,7 @@ public class BlankNotificationService : INotificationService
 {
     public async Task<Result> SendAsync()
     {
-        await Task.Delay(1000);
+        await Task.Delay(500);
 
         return Result.Success();
     }

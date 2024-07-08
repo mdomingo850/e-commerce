@@ -1,4 +1,3 @@
-
 using Serilog;
 using Modules.Customers.Api;
 using Modules.Inventories.Api;
@@ -13,6 +12,12 @@ using Modules.Orders.Api.MessageConsumers;
 using Modules.Orders.Api.Sagas;
 using Modules.Orders.Persistence;
 using Modules.Orders.Domain.Entities;
+using E_Commerce;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Http.Timeouts;
+using E_Commerce.Middlewares;
+using SharedKernel.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -31,6 +36,7 @@ builder.Services.AddMassTransit((busConfigurator) =>
     busConfigurator.AddConsumer<PayOrderConsumer>();
     busConfigurator.AddConsumer<ReserveProductConsumer>();
     busConfigurator.AddConsumer<OrderProcessingCompletedConsumer>();
+    busConfigurator.AddConsumer<ReverseOrderPaymentConsumer>();
 
     busConfigurator.AddSagaStateMachine<OrderProcessingSaga, OrderProcessingSagaData>()
         .EntityFrameworkRepository(r =>
@@ -54,7 +60,20 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddRequestTimeouts(options => {
+    options.DefaultPolicy =
+        new RequestTimeoutPolicy { Timeout = TimeSpan.FromMilliseconds(600) };
+});
 builder.Services.AddSwaggerGen();
+
+var rabbitMQConnectionString = builder.Configuration["MessageBroker:Host"];
+
+builder.Services.AddHealthChecks()
+    .AddRabbitMQ(rabbitConnectionString: rabbitMQConnectionString);
+
+var apiName = Environment.GetEnvironmentVariable("API_NAME");
+
+builder.Services.AddScoped<IEnvironmentVariables>(x => new EnvironmentVariables(apiName));
 
 var app = builder.Build();
 
@@ -63,12 +82,23 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    if (apiName.Equals("API_1"))
+        app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.MapHealthChecks("health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
+app.UseAuthorization();
+app.UseRequestTimeouts();
+app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

@@ -8,14 +8,11 @@ namespace Modules.Orders.Persistence.Repositories;
 internal class SqlOrderRespository : IOrderRepository
 {
     private readonly OrderDbContext _dbContext;
-    private readonly IMapper _mapper;
 
     public SqlOrderRespository(
-        OrderDbContext dbContext,
-        IMapper mapper)
+        OrderDbContext dbContext)
     {
         _dbContext = dbContext;
-        _mapper = mapper;
     }
 
     public async Task AddAsync(Order order)

@@ -74,6 +74,9 @@ namespace Modules.Orders.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("OrderConfirmationEmailSent")
                         .HasColumnType("bit");
 
@@ -83,15 +86,30 @@ namespace Modules.Orders.Persistence.Migrations
                     b.Property<bool>("OrderPaid")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("OrderPaymentReversed")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("OrderProcessingCompleted")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("OrderProcessingSucceeded")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("ProductReserved")
                         .HasColumnType("bit");
 
+                    b.Property<int>("QuantityBought")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("CorrelationId");
 
-                    b.ToTable("SagaData", (string)null);
+                    b.ToTable("OrderProcessingSagaData", (string)null);
                 });
 
             modelBuilder.Entity("Modules.Orders.Persistence.Models.OutboxMessage", b =>
@@ -110,12 +128,21 @@ namespace Modules.Orders.Persistence.Migrations
                     b.Property<string>("Error")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ProcessedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 

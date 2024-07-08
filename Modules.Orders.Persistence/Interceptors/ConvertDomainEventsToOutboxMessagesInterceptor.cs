@@ -42,7 +42,8 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor : SaveChanges
                     }),
                 DateTime.UtcNow,
                 null,
-                null
+                null,
+                false
             ))
             .ToList();
 

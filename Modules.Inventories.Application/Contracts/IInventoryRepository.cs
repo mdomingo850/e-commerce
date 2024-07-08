@@ -6,4 +6,5 @@ public interface IInventoryRepository
 {
     Task UpdateProductAsync(Product product);
     Task<Product?> GetProductByIdAsync(Guid id);
+    Task<bool> ReduceStockAmount(Guid productId, int quantityToReduce, Guid orderId);
 }

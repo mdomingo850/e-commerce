@@ -64,8 +64,9 @@ public class Order : AggregateRoot
         OrderStatus orderStatus = OrderStatus.Placed)
     {
         var order = new Order(id, customer, orderItems, orderDate, orderStatus);
-
-        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), id));
+        var orderItem = orderItems.First();
+        var product = orderItem.Product;
+        order.Raise(new OrderCreatedDomainEvent(Guid.NewGuid(), id, product.Id, orderItem.Quanitity));
 
         return order;
     }
