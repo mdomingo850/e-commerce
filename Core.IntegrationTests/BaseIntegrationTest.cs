@@ -13,7 +13,6 @@ public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppF
 
     protected BaseIntegrationTest(IntegrationTestWebAppFactory factory)
     {
-        var test = 1;
         _scope = factory.Services.CreateScope();
 
         Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
