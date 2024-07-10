@@ -83,7 +83,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.ApplyMigrations();
+    if (apiName.Equals("API_1"))
+        app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();
