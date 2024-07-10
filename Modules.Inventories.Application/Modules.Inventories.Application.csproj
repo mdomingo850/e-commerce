@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Modules.Inventories.Domain\Modules.Inventories.Domain.csproj" />
+    <ProjectReference Include="..\Modules.Inventories.IntegrationEvents\Modules.Inventories.IntegrationEvents.csproj" />
   </ItemGroup>
 
 </Project>

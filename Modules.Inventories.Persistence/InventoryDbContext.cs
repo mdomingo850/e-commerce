@@ -12,6 +12,7 @@ public class InventoryDbContext : DbContext
 
     public DbSet<Product> Products { get; set; }
     public DbSet<OutboxMessage> OutboxMessages { get; set; }
+    public DbSet<InboxMessage> InboxMessages { get; set; }
 
 
     public InventoryDbContext(ILogger<InventoryDbContext> logger)
@@ -46,5 +47,6 @@ public class InventoryDbContext : DbContext
         });
             
         modelBuilder.Entity<OutboxMessage>().ToTable(nameof(OutboxMessages));
+        modelBuilder.Entity<InboxMessage>().ToTable(nameof(InboxMessage));
     }
 }

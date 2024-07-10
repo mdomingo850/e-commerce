@@ -7,8 +7,6 @@ using Newtonsoft.Json;
 using Quartz;
 using SharedKernel.Domain.Entities.Primitives;
 using SharedKernel.Models;
-using System;
-using static MassTransit.Monitoring.Performance.BuiltInCounters;
 
 namespace Modules.Orders.Infrastructure.BackgroundJobs;
 

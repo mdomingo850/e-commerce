@@ -1,5 +1,7 @@
-﻿namespace Modules.Orders.IntegrationEvents;
+﻿using SharedKernel.Domain.Entities.Primitives;
 
-public sealed record ReserveProduct(Guid OrderId, Guid ProductId, int QuantityBought)
+namespace Modules.Orders.IntegrationEvents;
+
+public sealed record ReserveProduct(Guid OrderId, Guid ProductId, int QuantityBought) : IIntegrationEvent
 {
 }
