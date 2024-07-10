@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Transports;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Modules.Inventories.Application.Contracts;
@@ -17,43 +18,65 @@ public sealed class ReserveProductConsumer : IConsumer<ReserveProduct>
     private readonly IMediator _mediator;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly ILogger<ReserveProductConsumer> _logger;
+    private readonly IPublishEndpoint _publishEndpoint;
 
     public ReserveProductConsumer(
         IMediator mediator,
         IInventoryRepository inventoryRepository,
-        ILogger<ReserveProductConsumer> logger)
+        ILogger<ReserveProductConsumer> logger,
+        IPublishEndpoint publishEndpoint)
     {
         _mediator = mediator;
         _inventoryRepository = inventoryRepository;
         _logger = logger;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task Consume(ConsumeContext<ReserveProduct> context)
     {
-        if (await _inventoryRepository.HasInboxMessage(context.Message.OrderId))
+        var inboxMessage = await _inventoryRepository.GetInboxMessageByIdAsync(context.Message.OrderId);
+        
+        if (inboxMessage is not null && inboxMessage.ProcessedOn is not null)
         {
-            _logger.LogInformation($"Order with id {context.Message.OrderId} already has a message in the inbox");
+            _logger.LogInformation($"Order with id {context.Message.OrderId} has already been processed.");
             return;
         }
 
-        var domainEvent = new ReserveProductDomainEvent(
-                                context.Message.OrderId,
-                                context.Message.ProductId,
-                                context.Message.QuantityBought);
+        var reserveProductResult = await _mediator.Send(new ReserveProductCommand(
+            context.Message.OrderId,
+            context.Message.ProductId,
+            context.Message.QuantityBought));
 
-        var inboxMessage = new InboxMessage(
-                       domainEvent.OrderId, 
-                       domainEvent.GetType().Name,
-                       JsonConvert.SerializeObject(
-                            domainEvent,
-                            new JsonSerializerSettings
-                            {
-                                TypeNameHandling = TypeNameHandling.All
-                            }),
-                       DateTime.Now,
-                       null,
-                       null);
+        if (!reserveProductResult.IsSuccess)
+        {
+            await _publishEndpoint.Publish(
+                new ProductReservedFailedIntegrationEvent(context.Message.OrderId));
+            return;
+        }
 
-        await _inventoryRepository.AddInboxMessage(inboxMessage);
+        await _publishEndpoint.Publish(
+            new ProductReservedIntegrationEvent(context.Message.OrderId));
+
+        if (inboxMessage is not null)
+        {
+            inboxMessage.ProcessedOn = DateTime.Now;
+        }
+        else
+        {
+            inboxMessage = new InboxMessage(
+                           context.Message.OrderId,
+                           context.Message.GetType().Name,
+                           JsonConvert.SerializeObject(
+                                context.Message,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                }),
+                           DateTime.Now,
+                           DateTime.Now,
+                           null);
+        }
+
+        await _inventoryRepository.AddOrUpdateInboxMessageAsync(inboxMessage);
     }
 }

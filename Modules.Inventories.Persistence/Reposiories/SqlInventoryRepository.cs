@@ -79,9 +79,9 @@ internal class SqlInventoryRepository : IInventoryRepository
         return false; // Stock update failed after retries
     }
 
-    public async Task AddInboxMessage(InboxMessage message)
+    public async Task AddOrUpdateInboxMessageAsync(InboxMessage message)
     {
-        _dbContext.Add(message);
+        await _dbContext.AddAsync(message);
 
         await _dbContext.SaveChangesAsync();
     }
@@ -89,5 +89,17 @@ internal class SqlInventoryRepository : IInventoryRepository
     public async Task<bool> HasInboxMessage(Guid inboxId)
     {
         return await _dbContext.InboxMessages.AnyAsync(x => x.Id == inboxId);
+    }
+
+    public async Task<InboxMessage> GetInboxMessageByIdAsync(Guid id)
+    {
+        var inboxMessage = await _dbContext.InboxMessages.SingleOrDefaultAsync(x => x.Id == id);
+
+        if (inboxMessage == null)
+        {
+            return null;
+        }
+
+        return inboxMessage;
     }
 }
